@@ -1,2 +1,2 @@
 # expenses
-springboot+easyui的支出记录
+springboot+easyui支出记录
