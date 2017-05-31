@@ -23,7 +23,8 @@ public class ExpensesController {
      * @return
      */
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public PageResult all(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "rows", defaultValue = "1") Integer rows) {
+    public PageResult all(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                          @RequestParam(value = "rows", defaultValue = "1") Integer rows) {
         PageResult pageResult = new PageResult();
         // arg1 第几页,arg2 pageSize,conut 计算总数
         Page<Object> pageHelper = PageHelper.startPage(page, rows, true);
@@ -41,7 +42,12 @@ public class ExpensesController {
      */
     @RequestMapping(value = "", method = RequestMethod.POST)
     public String add(Expenses expenses) {
-        Integer i = this.expensesService.addExpenses(expenses.getCategory(), expenses.getRemark(), expenses.getMoney(), expenses.getExdate());
+        Integer i = this.expensesService.addExpenses(
+                expenses.getCategory(),
+                expenses.getRemark(),
+                expenses.getMoney(),
+                expenses.getExdate(),
+                expenses.getName());
         if (i > 0) {
             return "新增成功。";
         }
@@ -69,7 +75,13 @@ public class ExpensesController {
      */
     @RequestMapping(value = "", method = RequestMethod.PUT)
     public String update(Expenses expenses) {
-        Integer i = expensesService.upExpenses(expenses.getId(), expenses.getCategory(), expenses.getRemark(), expenses.getMoney(), expenses.getExdate());
+        Integer i = expensesService.upExpenses(
+                expenses.getId(),
+                expenses.getCategory(),
+                expenses.getRemark(),
+                expenses.getMoney(),
+                expenses.getExdate(),
+                expenses.getName());
         if (i > 0) {
             return "修改成功。";
         }

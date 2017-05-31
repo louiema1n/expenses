@@ -13,6 +13,7 @@ public class Expenses {
     private String remark;  //细类
     private double money;   //金额
     private String exdate;    //消费时间
+    private String name;    // 支出人
 
     public Integer getId() {
         return id;
@@ -52,5 +53,13 @@ public class Expenses {
 
     public void setExdate(String exdate) {
         this.exdate = exdate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

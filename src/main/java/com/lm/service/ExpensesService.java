@@ -20,16 +20,16 @@ public class ExpensesService {
         return this.expensesMapper.findAll();
     }
 
-    public Integer addExpenses(String category, String remark, Double money, String exdate) {
-        return this.expensesMapper.add(category, remark, money, exdate);
+    public Integer addExpenses(String category, String remark, Double money, String exdate, String name) {
+        return this.expensesMapper.add(category, remark, money, exdate, name);
     }
 
     public Integer delExpenses(Integer id) {
         return this.expensesMapper.delete(id);
     }
 
-    public Integer upExpenses(Integer id, String category, String remark, Double money, String exdate) {
-        return this.expensesMapper.update(id, category, remark, money, exdate);
+    public Integer upExpenses(Integer id, String category, String remark, Double money, String exdate, String name) {
+        return this.expensesMapper.update(id, category, remark, money, exdate, name);
     }
 
     public List<Expenses> findByDate(String sdate, String edate) {

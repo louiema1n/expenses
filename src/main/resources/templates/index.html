@@ -23,6 +23,7 @@
             <th data-options="field:'remark'">细类</th>
             <th data-options="field:'money',width:80">金额</th>
             <th data-options="field:'exdate',width:250">消费时间</th>
+            <th data-options="field:'name',width:100">支出人</th>
         </tr>
         </thead>
     </table>
@@ -125,6 +126,15 @@
                     <tr>
                         <td>消费时间:</td>
                         <td><input class="easyui-datetimebox" name="exdate" id="exdate"></td>
+                    </tr>
+                    <tr>
+                        <td>支出人:</td>
+                        <td>
+                            <select class="easyui-combobox" name="name">
+                                <option value="Louiemain">Louiemain</option>
+                                <option value="xtz">xtz</option>
+                            </select>
+                        </td>
                     </tr>
                 </table>
             </form>

@@ -22,7 +22,7 @@ spring:
     row-bounds-with-count: true
     reasonable: true
 
-
+# 多配置文件
 ---
 spring:
   profiles: dev
