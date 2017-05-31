@@ -5,12 +5,12 @@ server:
 spring:
 # datasource
   profiles:
-    active: prd
+    active: dev
 
 # thymeleaf
   thymeleaf:
     cache: false
-    prefix: classpath:/templates
+    prefix: classpath:/templates/
     mode: HTML
     encoding: utf-8
     content-type: text/html
