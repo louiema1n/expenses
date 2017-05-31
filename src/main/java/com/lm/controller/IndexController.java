@@ -14,4 +14,14 @@ public class IndexController {
         return "index";
     }
 
+    @RequestMapping("/expenses")
+    public String exp() {
+        return "expenses";
+    }
+
+    @RequestMapping("/income")
+    public String inc() {
+        return "income";
+    }
+
 }

@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class PageResult {
     private Integer total;
-    private List<Expenses> rows;
+    private List<?> rows;
 
     public Integer getTotal() {
         return total;
@@ -18,11 +18,11 @@ public class PageResult {
         this.total = total;
     }
 
-    public List<Expenses> getRows() {
+    public List<?> getRows() {
         return rows;
     }
 
-    public void setRows(List<Expenses> rows) {
+    public void setRows(List<?> rows) {
         this.rows = rows;
     }
 }

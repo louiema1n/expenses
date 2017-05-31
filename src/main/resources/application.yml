@@ -15,12 +15,14 @@ spring:
     encoding: utf-8
     content-type: text/html
 
+
 # pagehelper(https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/HowToUse.md)
   pagehelper:
     offset-as-page-num: true
     helper-dialect: mysql
     row-bounds-with-count: true
     reasonable: true
+
 
 # 多配置文件
 ---
