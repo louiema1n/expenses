@@ -5,29 +5,37 @@
 </head>
 <body>
     <!--支出表-->
-    <table id="dg" class="easyui-datagrid" style=""
+    <table id="dg" class="easyui-datagrid"
            data-options=" loadMsg: '正在努力为您加载数据',
                         singleSelect:true,
                         collapsible:false,
                         url:'/exp',
                         method:'get',
                         toolbar:'#toolbar',
+                        rownumbers:true,
                         pagination:'true',
                         pageList:[20,30,50,100],
                         pageSize:20,
-                        footer:'#ft',
-                        onLoadSuccess:count">
+                        fit:true,
+                        showFooter:true">
         <thead>
         <tr>
-            <th data-options="field:'id',width:30">ID</th>
-            <th data-options="field:'category',width:80">类别</th>
-            <th data-options="field:'remark'">细类</th>
-            <th data-options="field:'money',width:80">金额</th>
-            <th data-options="field:'exdate',width:250">消费时间</th>
-            <th data-options="field:'name',width:100">支出人</th>
+            <th data-options="field:'category',width:fixWidth(0.15)">类别</th>
+            <th data-options="field:'remark',width:fixWidth(0.15)">细类</th>
+            <th data-options="field:'money',width:fixWidth(0.2)">金额</th>
+            <th data-options="field:'exdate',width:fixWidth(0.2)">消费时间</th>
+            <th data-options="field:'name',width:fixWidth(0.3)">支出人</th>
         </tr>
         </thead>
     </table>
+
+    <!-- 计算页面宽度/高度 -->
+    <script type="text/javascript">
+        function fixWidth(percent)
+        {
+            return ($(document.body).width() - 265) * percent ; //这里你可以自己做调整
+        }
+    </script>
 
     <!-- 工具栏 -->
     <div id="toolbar" style="padding:5px">
@@ -44,41 +52,46 @@
         </div>
     </div>
 
-    <!--表尾合计标签-->
-    <div id="ft" style="padding: 3px"></div>
-
-    <!--合计计算-->
-    <script type="text/javascript">
-        function count() {
-            var rows = $('#dg').datagrid('getRows')//获取当前页的数据行
-            var total = 0;
-            for (var i = 0; i < rows.length; i++) {
-                total += rows[i]['money']; //获取指定列
-            }
-            $('#ft').html('合计支出：' + "<span style='color: red'>" + '￥' + total.toFixed(2)  + "</span>");
-        }
-    </script>
-
     <!-- 按钮操作绑定-->
     <script type="text/javascript">
-        <!-- 新增按钮 -->
+        // 新增按钮
         function add(){
-            $('#dlg').dialog({closed:false,modal:true});
+            $('#ff').form('reset');
+            initime();
+            $('#dlg').dialog({
+                title:'新增',
+                closed:false,
+                modal:true,
+                iconCls:'icon-save'
+            });
         };
         <!-- 删除按钮 -->
         function remove(){
             // 获取当前选中行
             var row = $('#dg').datagrid('getSelected');
             if (row) {
-                $.ajax({url:'/exp/'+row.id,type:'DELETE',success:function(result){
-                    $.messager.show({
-                        title:'温馨提示',
-                        msg:result,
-                        timeout:1000,
-                        showType:'slide'
-                    });
-                    $('#dg').datagrid('reload');//删除后重新加载下
-                }});
+                $.messager.confirm('确认','确定要删除选择的记录吗?',function(r) {
+                    if (r) {
+                        $.ajax({
+                            url: '/exp/' + row.id, type: 'DELETE', success: function (result) {
+                                $.messager.show({
+                                    title: '温馨提示',
+                                    msg: result,
+                                    timeout: 1000,
+                                    showType: 'slide'
+                                });
+                                $('#dg').datagrid('reload');//删除后重新加载下
+                            }
+                        });
+                    }
+                });
+            }else {
+                $.messager.show({
+                    title:'温馨提示',
+                    msg:'请选择需要删除行。',
+                    timeout:1000,
+                    showType:'slide'
+                });
             }
         };
         <!-- 修改按钮 -->
@@ -87,11 +100,19 @@
             var row = $('#dg').datagrid('getSelected');
             if (row) {
                 $('#dlg').dialog({
+                    title:'修改',
                     closed:false,
                     modal:true,
-                    title:'修改',
+                    iconCls:'icon-edit'
                 });
                 $('#ff').form('load',row);
+            }else {
+                $.messager.show({
+                    title:'温馨提示',
+                    msg:'请选择需要修改行。',
+                    timeout:1000,
+                    showType:'slide'
+                });
             }
         };
         <!-- 搜索 -->
@@ -101,47 +122,46 @@
     </script>
 
     <!-- 新增表单 -->
-    <div id="dlg" class="easyui-dialog" title="新增" closed="true" data-options="iconCls:'icon-save'" style="width:auto;height:auto;padding:10px">
+    <div id="dlg" class="easyui-dialog" closed="true" data-options="buttons:'#dlg-buttons'" style="width:450px;height:auto;padding:10px">
         <div style="padding:10px 60px 20px 60px">
             <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
                 <table cellpadding="5">
                     <!-- 隐藏域id -->
                     <input type="hidden" id="id" name="id">
-                    <tr>
-                        <td>类别:</td>
-                        <td>
-                            <select class="easyui-combobox" name="category" style="">
-                                <option value="生活费">生活费</option>
-                                <option value="生活费2">生活费2</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>细类:</td>
-                        <td><input class="easyui-textbox" type="text" name="remark" data-options="required:true"></input></td>
-                    </tr>
-                    <tr>
-                        <td>金额:</td>
-                        <td><input class="easyui-numberbox" name="money" data-options="required:true,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'￥'"></input></td>
-                    </tr>
-                    <tr>
-                        <td>消费时间:</td>
-                        <td><input class="easyui-datetimebox" name="exdate" id="exdate"></td>
-                    </tr>
-                    <tr>
-                        <td>支出人:</td>
-                        <td>
-                            <select class="easyui-combobox" name="name">
-                                <option value="Louiemain">Louiemain</option>
-                                <option value="xtz">xtz</option>
-                            </select>
-                        </td>
-                    </tr>
+                    <div style="margin-bottom:20px;font-size:14px;border-bottom:1px solid #ccc">支出明细记录</div>
+
+                    <div style="margin-bottom:10px">
+                        <select name="category" class="easyui-combobox" required="true" label="支出类别:" style="width:100%">
+                            <option value="生活费">生活费</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom:10px">
+                        <input name="remark" class="easyui-textbox" required="true" label="细类:" style="width:100%">
+                        </input>
+                    </div>
+
+                    <div style="margin-bottom:10px">
+                        <input name="money" class="easyui-numberbox" required="true" precision="2" groupSeparator="," decimalSeparator="." prefix="￥" label="金额:" style="width:100%">
+                        </input>
+                    </div>
+
+                    <div style="margin-bottom:10px">
+                        <input id="exdate" name="exdate" class="easyui-datetimebox" required="true" label="支出时间:" style="width:100%">
+                        </input>
+                    </div>
+
+                    <div style="margin-bottom:10px">
+                        <select name="name" class="easyui-combobox" required="true" label="支出人:" style="width:100%">
+                            <option value="Louiemain">Louiemain</option>
+                            <option value="xtz">xtz</option>
+                        </select>
+                    </div>
                 </table>
             </form>
-            <div style="text-align:center;padding:5px">
-                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
-                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+            <div style="padding:5px" id="dlg-buttons">
+                <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px" onclick="submitForm()">提交</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" style="width:90px" onclick="clearForm()">重置</a>
             </div>
         </div>
         <script>
@@ -169,11 +189,12 @@
                 });
             }
             function clearForm(){
-                $('#ff').form('clear');
+                $('#ff').form('reset');
+                initime();
             }
 
-            // 默认当前系统时间
-            $(function()
+            // 初始化当前系统时间
+            function initime()
             {
                 var curr_time=new Date();
                 var strDate=curr_time.getFullYear()+"-";
@@ -183,7 +204,7 @@
                 strDate +=curr_time.getMinutes()+":";
                 strDate +=curr_time.getSeconds();
                 $("#exdate").datetimebox("setValue",strDate);
-            });
+            };
 
         </script>
     </div>

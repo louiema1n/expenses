@@ -2,11 +2,16 @@ package com.lm.controller;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.lm.domain.Expenses;
+import com.lm.domain.Footer;
 import com.lm.domain.Income;
 import com.lm.domain.PageResult;
 import com.lm.service.IncomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Louie on 2017-05-29.
@@ -28,10 +33,30 @@ public class IncomeController {
         PageResult pageResult = new PageResult();
         // arg1 第几页,arg2 pageSize,conut 计算总数
         Page<Object> pageHelper = PageHelper.startPage(page, rows, true);
-        pageResult.setRows(this.incomeService.findAll());
+
+        // 获取记录
+        List<Income> incomeList = new ArrayList<>();
+        incomeList = this.incomeService.findAll();
+
         // 获取总记录数
         Long total = pageHelper.getTotal();
+
+        // 设置footer属性
+        Footer footer = new Footer();
+        footer.setCategory("缴纳合计：");
+        // 遍历list，计算money总和
+        double totalMoney = 0;
+        for (Income income : incomeList) {
+            totalMoney += income.getMoney();
+        }
+        footer.setMoney(totalMoney);
+
+        List<Footer> footerList = new ArrayList<>();
+        footerList.add(footer);
+
+        pageResult.setRows(incomeList);
         pageResult.setTotal(Integer.parseInt(total.toString()));
+        pageResult.setFooter(footerList);
         return pageResult;
     }
 
@@ -92,13 +117,31 @@ public class IncomeController {
     public PageResult findByDate(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                  @RequestParam(value = "rows", defaultValue = "1") Integer rows,
                                  @PathVariable("sdate") String sdate, @PathVariable("edate") String edate) {
-        PageResult dPageResult = new PageResult();
+        PageResult pageResult = new PageResult();
         // arg1 第几页,arg2 pageSize,conut 计算总数
         Page<Object> pageHelper = PageHelper.startPage(page, rows, true);
-        dPageResult.setRows(this.incomeService.findByDate(sdate, edate));
+
+        List<Income> incomeList = new ArrayList<>();
+        incomeList = this.incomeService.findByDate(sdate, edate);
+
         // 获取总记录数
         Long total = pageHelper.getTotal();
-        dPageResult.setTotal(Integer.parseInt(total.toString()));
-        return dPageResult;
+
+        // 设置footer
+        Footer footer = new Footer();
+        footer.setCategory("缴纳合计：");
+        double totalMoney = 0;
+        for (Income income : incomeList) {
+            totalMoney += income.getMoney();
+        }
+        footer.setMoney(totalMoney);
+
+        List<Footer> footerList = new ArrayList<>();
+        footerList.add(footer);
+
+        pageResult.setFooter(footerList);
+        pageResult.setRows(incomeList);
+        pageResult.setTotal(Integer.parseInt(total.toString()));
+        return pageResult;
     }
 }

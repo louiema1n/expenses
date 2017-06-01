@@ -7,8 +7,9 @@ import java.util.List;
  * Created by Louie on 2017-05-30.
  */
 public class PageResult {
-    private Integer total;
-    private List<?> rows;
+    private Integer total;  // 总数
+    private List<?> rows;   // 所有记录
+    private List<Footer> footer;
 
     public Integer getTotal() {
         return total;
@@ -24,5 +25,13 @@ public class PageResult {
 
     public void setRows(List<?> rows) {
         this.rows = rows;
+    }
+
+    public List<Footer> getFooter() {
+        return footer;
+    }
+
+    public void setFooter(List<Footer> footer) {
+        this.footer = footer;
     }
 }
