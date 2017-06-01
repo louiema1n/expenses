@@ -8,7 +8,7 @@
     <table id="dg" class="easyui-datagrid"
            data-options=" loadMsg: '正在努力为您加载数据',
                         singleSelect:true,
-                        collapsible:false,
+                        fitColumns:true,
                         url:'/inc',
                         method:'get',
                         toolbar:'#toolbar',
@@ -33,7 +33,7 @@
     <script type="text/javascript">
         function fixWidth(percent)
         {
-            return ($(document.body).width() - 15) * percent ; //这里你可以自己做调整
+            return $(document.body).width()* percent ; //这里你可以自己做调整
         }
     </script>
 

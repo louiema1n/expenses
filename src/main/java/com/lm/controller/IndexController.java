@@ -24,4 +24,9 @@ public class IndexController {
         return "income";
     }
 
+//    @RequestMapping("/indext")
+//    public String indext() {
+//        return "indext";
+//    }
+
 }
