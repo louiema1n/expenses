@@ -7,4 +7,5 @@ springboot+easyui支出记录
 3、完善功能（2017-5-31 23:05:41）
 
 # 2017-6-1 更新
-1、完善功能
+1、完善功能\
+2、解决iframe引入滚动条问题（<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">）
