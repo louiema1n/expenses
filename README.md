@@ -10,3 +10,7 @@ springboot+easyui支出记录
 1、完善功能\
 2、解决iframe引入滚动条问题（<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">）\
 3、完善菜单样式（2017-6-1 16:53:54）
+
+# 2017-6-2 更新
+1、添加datagrid行间隔条纹\
+2、优化菜单点击(2017-6-2 08:20:20)

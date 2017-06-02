@@ -10,8 +10,8 @@
         <div class="easyui-accordion" data-options="fit:true,border:false">
             <div id="jilu" title="记录选择" data-options="selected:true,iconCls:'icon-application-cascade'" style="overflow:auto;padding-top: 5px">
                 <ul class="easyui-tree wu-side-tree">
-                    <li iconCls="icon-undo"><a href="javascript:void(0)" onclick="addTabs('支出明细记录','expenses')">支出明细记录</a></li>
-                    <li iconCls="icon-arrow-switch"><a href="javascript:void(0)" onclick="addTabs('缴纳明细记录','income')">缴纳明细记录</a></li>
+                    <li iconCls="icon-undo"><div style="width: 160px" onclick="addTabs('支出明细记录','expenses')">支出明细记录</div></li>
+                    <li iconCls="icon-arrow-switch"><div style="width: 160px" onclick="addTabs('缴纳明细记录','income')">缴纳明细记录</div></li>
                     <script type="text/javascript">
                         function addTabs(title,url) {
                             if ($('#tt').tabs('exists', title)){
@@ -38,7 +38,7 @@
         </div>
     </div>
     <div data-options="region:'east',split:true,collapsed:true,title:'East'" style="width:100px;padding:10px;">east region</div>
-    <div data-options="region:'south',border:true" style="height:70px;background-image: url(/img/footer.png)">
+    <div data-options="region:'south',border:true" style="height:50px;background-image: url(/img/footer.png)">
         <!-- 尾部信息 -->
         <div th:insert="common/footer :: footer" style="text-align: center"></div>
     </div>
