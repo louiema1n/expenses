@@ -8,7 +8,7 @@
     <div data-options="region:'north'" style="height: 80px;background-image:url(/img/banner.png);"></div>
     <div data-options="region:'west',split:true,title:'菜单导航'" style="width:200px;">
         <div class="easyui-accordion" data-options="fit:true,border:false">
-            <div id="jilu" title="记录选择" data-options="selected:true,iconCls:'icon-application-cascade'" style="overflow:auto;padding-top: 5px">
+            <div title="记录选择" data-options="selected:true,iconCls:'icon-application-cascade'" style="overflow:hidden;padding-top: 5px">
                 <ul class="easyui-tree wu-side-tree">
                     <li iconCls="icon-undo"><div style="width: 160px" onclick="addTabs('支出明细记录','expenses')">支出明细记录</div></li>
                     <li iconCls="icon-arrow-switch"><div style="width: 160px" onclick="addTabs('缴纳明细记录','income')">缴纳明细记录</div></li>
@@ -29,11 +29,15 @@
                     </script>
                 </ul>
             </div>
-            <div title="系统设置" data-options="iconCls:'icon-cog'" style="padding:10px;">
-                content2
+            <div title="系统设置" data-options="selected:true,iconCls:'icon-cog'" style="overflow:hidden;padding-top:5px;">
+                <ul class="easyui-tree wu-side-tree">
+                    <li iconCls="icon-undo"><div style="width: 160px" onclick="addTabs('支出明细记录','#')">待开发</div></li>
+                </ul>
             </div>
-            <div title="字典管理" data-options="iconCls:'icon-book'" style="padding:10px">
-                content3
+            <div title="字典管理" data-options="selected:true,iconCls:'icon-book'" style="overflow:hidden;padding-top:5px">
+                <ul class="easyui-tree wu-side-tree">
+                    <li iconCls="icon-application-form-edit"><div style="width: 160px" onclick="addTabs('字典设置','dict')">数据字典维护</div></li>
+                </ul>
             </div>
         </div>
     </div>

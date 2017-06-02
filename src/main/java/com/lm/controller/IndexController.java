@@ -24,9 +24,14 @@ public class IndexController {
         return "income";
     }
 
-//    @RequestMapping("/indext")
-//    public String indext() {
-//        return "indext";
-//    }
+    @RequestMapping("/dict")
+    public String indext() {
+        return "dict";
+    }
+
+    @RequestMapping("/menu")
+    public String menu() {
+        return "temp/menu";
+    }
 
 }

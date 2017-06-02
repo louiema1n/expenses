@@ -59,6 +59,7 @@
         function add(){
             $('#ff').form('reset');
             initime();
+            initcn();
             $('#dlg').dialog({
                 title:'新增',
                 closed:false,
@@ -97,6 +98,7 @@
         };
         <!-- 修改按钮 -->
         function edit(){
+            initcn();
             // 获取当前选中行
             var row = $('#dg').datagrid('getSelected');
             if (row) {
@@ -132,8 +134,7 @@
                     <div style="margin-bottom:20px;font-size:14px;border-bottom:1px solid #ccc">缴纳明细记录</div>
 
                     <div style="margin-bottom:10px">
-                        <select name="category" class="easyui-combobox" required="true" label="缴纳类别:" style="width:100%">
-                            <option value="生活费">生活费</option>
+                        <select id="category" name="category" class="easyui-combobox" required="true" label="缴纳类别:" style="width:100%">
                         </select>
                     </div>
 
@@ -148,9 +149,7 @@
                     </div>
 
                     <div style="margin-bottom:10px">
-                        <select name="name" class="easyui-combobox" required="true" label="缴纳人:" style="width:100%">
-                            <option value="Louiemain">Louiemain</option>
-                            <option value="xtz">xtz</option>
+                        <select id="name" name="name" class="easyui-combobox" required="true" label="缴纳人:" style="width:100%">
                         </select>
                     </div>
 
@@ -205,6 +204,22 @@
                 strDate +=curr_time.getSeconds();
                 $("#exdate").datetimebox("setValue",strDate);
             };
+            function initcn() {
+                // 初始化name
+                $("#name").combobox({
+                    url:'nameDict',
+                    method:'GET',
+                    valueField:'text',
+                    textField:'text'
+                })
+                // 初始化category
+                $("#category").combobox({
+                    url:'cateDict',
+                    method:'GET',
+                    valueField:'text',
+                    textField:'text'
+                })
+            }
         </script>
     </div>
 </body>
