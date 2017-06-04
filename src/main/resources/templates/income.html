@@ -18,14 +18,17 @@
                         pageSize:20,
                         showFooter:true,
                         striped:true,
+                        remoteSort:false,
+                        sortOrder: 'desc',
+                        sortName: 'exdate',
                         fit:true">
         <thead>
         <tr>
-            <th data-options="field:'category',width:fixWidth(0.1)">缴纳类别</th>
-            <th data-options="field:'money',width:fixWidth(0.15)">金额</th>
-            <th data-options="field:'exdate',width:fixWidth(0.2)">缴纳时间</th>
-            <th data-options="field:'name',width:fixWidth(0.25)">缴纳人</th>
-            <th data-options="field:'remark',width:fixWidth(0.3)">备注</th>
+            <th data-options="field:'category',width:fixWidth(0.1),sortable:'true'">缴纳类别</th>
+            <th data-options="field:'money',width:fixWidth(0.15),sortable:'true'">金额</th>
+            <th data-options="field:'exdate',width:fixWidth(0.2),sortable:'true'">缴纳时间</th>
+            <th data-options="field:'name',width:fixWidth(0.25),sortable:'true'">缴纳人</th>
+            <th data-options="field:'remark',width:fixWidth(0.3),sortable:'true'">备注</th>
         </tr>
         </thead>
     </table>

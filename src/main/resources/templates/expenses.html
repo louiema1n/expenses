@@ -4,9 +4,9 @@
     <title>支出系统</title>
 </head>
 <body>
-    <!--支出表-->
-    <table id="dg" class="easyui-datagrid"
-           data-options=" loadMsg: '正在努力为您加载数据',
+<!--支出表-->
+<table id="dg" class="easyui-datagrid"
+       data-options=" loadMsg: '正在努力为您加载数据',
                         singleSelect:true,
                         fitColumns:true,
                         url:'/exp',
@@ -18,211 +18,224 @@
                         pageSize:20,
                         fit:true,
                         striped:true,
+                        remoteSort:false,
+                        sortOrder: 'desc',
+                        sortName: 'exdate',
                         showFooter:true">
-        <thead>
-        <tr>
-            <th data-options="field:'category',width:fixWidth(0.1)">类别</th>
-            <th data-options="field:'remark',width:fixWidth(0.3)">备注</th>
-            <th data-options="field:'money',width:fixWidth(0.15)">金额</th>
-            <th data-options="field:'exdate',width:fixWidth(0.2)">消费时间</th>
-            <th data-options="field:'name',width:fixWidth(0.25)">支出人</th>
-        </tr>
-        </thead>
-    </table>
+    <thead>
+    <tr>
+        <th data-options="field:'category',width:fixWidth(0.1),sortable:'true'">类别</th>
+        <th data-options="field:'remark',width:fixWidth(0.3),sortable:'true'">备注</th>
+        <th data-options="field:'money',width:fixWidth(0.15),sortable:'true'">金额</th>
+        <th data-options="field:'exdate',width:fixWidth(0.2),sortable:'true'">消费时间</th>
+        <th data-options="field:'name',width:fixWidth(0.25),sortable:'true'">支出人</th>
+    </tr>
+    </thead>
+</table>
 
-    <!-- 计算页面宽度/高度 -->
-    <script type="text/javascript">
-        function fixWidth(percent)
-        {
-            return ($(document.body).width() - 15) * percent ; //这里你可以自己做调整
-        }
-    </script>
+<!-- 计算页面宽度/高度 -->
+<script type="text/javascript">
+    function fixWidth(percent) {
+        return ($(document.body).width() - 15) * percent; //这里你可以自己做调整
+    }
+</script>
 
-    <!-- 工具栏 -->
-    <div id="toolbar" style="padding:5px">
-        <div style="margin-bottom:5px">
-            <!-- 按钮组 -->
-            <a onclick="add()" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
-            <a onclick="remove()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
-            <a onclick="edit()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
-            <div>
-                日期: <input id="sdate" class="easyui-datebox" style="width: 100px">
-                至: <input id="edate" class="easyui-datebox" style="width: 100px">
-                <a onclick="sch()" class="easyui-linkbutton" iconCls="icon-search">搜索</a>
-            </div>
+<!-- 工具栏 -->
+<div id="toolbar" style="padding:5px">
+    <div style="margin-bottom:5px">
+        <!-- 按钮组 -->
+        <a onclick="add()" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
+        <a onclick="remove()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+        <a onclick="edit()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
+        <div>
+            日期: <input id="sdate" class="easyui-datebox" style="width: 100px">
+            至: <input id="edate" class="easyui-datebox" style="width: 100px">
+            <a onclick="sch()" class="easyui-linkbutton" iconCls="icon-search">搜索</a>
         </div>
     </div>
+</div>
 
-    <!-- 按钮操作绑定-->
-    <script type="text/javascript">
-        // 新增按钮
-        function add(){
+<!-- 按钮操作绑定-->
+<script type="text/javascript">
+    // 新增按钮
+    function add() {
+        $('#ff').form('reset');
+        initime();
+        initcn();
+        $('#dlg').dialog({
+            title: '新增',
+            closed: false,
+            modal: true,
+            iconCls: 'icon-save'
+        });
+    }
+    ;
+    <!-- 删除按钮 -->
+    function remove() {
+        // 获取当前选中行
+        var row = $('#dg').datagrid('getSelected');
+        if (row) {
+            $.messager.confirm('确认', '确定要删除选择的记录吗?', function (r) {
+                if (r) {
+                    $.ajax({
+                        url: '/exp/' + row.id, type: 'DELETE', success: function (result) {
+                            $.messager.show({
+                                title: '温馨提示',
+                                msg: result,
+                                timeout: 1000,
+                                showType: 'slide'
+                            });
+                            $('#dg').datagrid('reload');//删除后重新加载下
+                        }
+                    });
+                }
+            });
+        } else {
+            $.messager.show({
+                title: '温馨提示',
+                msg: '请选择需要删除行。',
+                timeout: 1000,
+                showType: 'slide'
+            });
+        }
+    }
+    ;
+    <!-- 修改按钮 -->
+    function edit() {
+        initcn();
+        // 获取当前选中行
+        var row = $('#dg').datagrid('getSelected');
+        if (row) {
+            $('#dlg').dialog({
+                title: '修改',
+                closed: false,
+                modal: true,
+                iconCls: 'icon-edit'
+            });
+            $('#ff').form('load', row);
+        } else {
+            $.messager.show({
+                title: '温馨提示',
+                msg: '请选择需要修改行。',
+                timeout: 1000,
+                showType: 'slide'
+            });
+        }
+    }
+    ;
+    <!-- 搜索 -->
+    function sch() {
+        $('#dg').datagrid({url: '/exp/' + $('#sdate').datebox('getValue') + '/' + $('#edate').datebox('getValue')});
+    }
+    ;
+</script>
+
+<!-- 新增表单 -->
+<div id="dlg" class="easyui-dialog" closed="true" data-options="buttons:'#dlg-buttons'"
+     style="width:450px;height:auto;padding:10px">
+    <div style="padding:10px 60px 20px 60px">
+        <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
+            <table cellpadding="5">
+                <!-- 隐藏域id -->
+                <input type="hidden" id="id" name="id">
+                <div style="margin-bottom:20px;font-size:14px;border-bottom:1px solid #ccc">支出明细记录</div>
+
+                <div style="margin-bottom:10px">
+                    <select id="category" name="category" class="easyui-combobox" required="true" label="支出类别:"
+                            style="width:100%">
+                    </select>
+                </div>
+
+                <div style="margin-bottom:10px">
+                    <input name="remark" class="easyui-textbox" required="true" label="备注:" style="width:100%">
+                    </input>
+                </div>
+
+                <div style="margin-bottom:10px">
+                    <input name="money" class="easyui-numberbox" required="true" precision="2" groupSeparator=","
+                           decimalSeparator="." prefix="￥" label="金额:" style="width:100%">
+                    </input>
+                </div>
+
+                <div style="margin-bottom:10px">
+                    <input id="exdate" name="exdate" class="easyui-datetimebox" required="true" label="支出时间:"
+                           style="width:100%">
+                    </input>
+                </div>
+
+                <div style="margin-bottom:10px">
+                    <select id="name" name="name" class="easyui-combobox" required="true" label="支出人:"
+                            style="width:100%">
+                    </select>
+                </div>
+            </table>
+        </form>
+        <div style="padding:5px" id="dlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px"
+               onclick="submitForm()">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" style="width:90px"
+               onclick="clearForm()">重置</a>
+        </div>
+    </div>
+    <script>
+        function submitForm() {
+            $('#ff').form('submit', {
+                url: '/exp',
+                onSubmit: function () {
+                    // 解决form不能提交put请求
+                    if (id.value > 0) {
+                        $('#ff').append('<input type="hidden" name="_method" value="PUT" />');
+                    }
+                    // 表单验证
+                    return $(this).form('enableValidation').form('validate');
+                },
+                success: function (data) {
+                    $('#dlg').dialog('close');
+                    $.messager.show({
+                        title: '温馨提示',
+                        msg: data,
+                        timeout: 1000,
+                        showType: 'slide'
+                    });
+                    return $('#dg').datagrid('reload');
+                }
+            });
+        }
+        function clearForm() {
             $('#ff').form('reset');
             initime();
             initcn();
-            $('#dlg').dialog({
-                title:'新增',
-                closed:false,
-                modal:true,
-                iconCls:'icon-save'
-            });
-        };
-        <!-- 删除按钮 -->
-        function remove(){
-            // 获取当前选中行
-            var row = $('#dg').datagrid('getSelected');
-            if (row) {
-                $.messager.confirm('确认','确定要删除选择的记录吗?',function(r) {
-                    if (r) {
-                        $.ajax({
-                            url: '/exp/' + row.id, type: 'DELETE', success: function (result) {
-                                $.messager.show({
-                                    title: '温馨提示',
-                                    msg: result,
-                                    timeout: 1000,
-                                    showType: 'slide'
-                                });
-                                $('#dg').datagrid('reload');//删除后重新加载下
-                            }
-                        });
-                    }
-                });
-            }else {
-                $.messager.show({
-                    title:'温馨提示',
-                    msg:'请选择需要删除行。',
-                    timeout:1000,
-                    showType:'slide'
-                });
-            }
-        };
-        <!-- 修改按钮 -->
-        function edit(){
-            initcn();
-            // 获取当前选中行
-            var row = $('#dg').datagrid('getSelected');
-            if (row) {
-                $('#dlg').dialog({
-                    title:'修改',
-                    closed:false,
-                    modal:true,
-                    iconCls:'icon-edit'
-                });
-                $('#ff').form('load',row);
-            }else {
-                $.messager.show({
-                    title:'温馨提示',
-                    msg:'请选择需要修改行。',
-                    timeout:1000,
-                    showType:'slide'
-                });
-            }
-        };
-        <!-- 搜索 -->
-        function sch(){
-            $('#dg').datagrid({url:'/exp/' + $('#sdate').datebox('getValue') + '/' + $('#edate').datebox('getValue')});
-        };
+        }
+
+        // 初始化
+        // 初始化当前系统时间
+        function initime() {
+            var curr_time = new Date();
+            var strDate = curr_time.getFullYear() + "-";
+            strDate += curr_time.getMonth() + 1 + "-";
+            strDate += curr_time.getDate() + "-";
+            strDate += " " + curr_time.getHours() + ":";
+            strDate += curr_time.getMinutes() + ":";
+            strDate += curr_time.getSeconds();
+            $("#exdate").datetimebox("setValue", strDate);
+        }
+        function initcn() {
+            // 初始化name
+            $("#name").combobox({
+                url: 'nameDict',
+                method: 'GET',
+                valueField: 'text',
+                textField: 'text'
+            })
+            // 初始化category
+            $("#category").combobox({
+                url: 'cateDict',
+                method: 'GET',
+                valueField: 'text',
+                textField: 'text'
+            })
+        }
     </script>
-
-    <!-- 新增表单 -->
-    <div id="dlg" class="easyui-dialog" closed="true" data-options="buttons:'#dlg-buttons'" style="width:450px;height:auto;padding:10px">
-        <div style="padding:10px 60px 20px 60px">
-            <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
-                <table cellpadding="5">
-                    <!-- 隐藏域id -->
-                    <input type="hidden" id="id" name="id">
-                    <div style="margin-bottom:20px;font-size:14px;border-bottom:1px solid #ccc">支出明细记录</div>
-
-                    <div style="margin-bottom:10px">
-                        <select id="category" name="category" class="easyui-combobox" required="true" label="支出类别:" style="width:100%">
-                        </select>
-                    </div>
-
-                    <div style="margin-bottom:10px">
-                        <input name="remark" class="easyui-textbox" required="true" label="备注:" style="width:100%">
-                        </input>
-                    </div>
-
-                    <div style="margin-bottom:10px">
-                        <input name="money" class="easyui-numberbox" required="true" precision="2" groupSeparator="," decimalSeparator="." prefix="￥" label="金额:" style="width:100%">
-                        </input>
-                    </div>
-
-                    <div style="margin-bottom:10px">
-                        <input id="exdate" name="exdate" class="easyui-datetimebox" required="true" label="支出时间:" style="width:100%">
-                        </input>
-                    </div>
-
-                    <div style="margin-bottom:10px">
-                        <select id="name" name="name" class="easyui-combobox" required="true" label="支出人:" style="width:100%">
-                        </select>
-                    </div>
-                </table>
-            </form>
-            <div style="padding:5px" id="dlg-buttons">
-                <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px" onclick="submitForm()">提交</a>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" style="width:90px" onclick="clearForm()">重置</a>
-            </div>
-        </div>
-        <script>
-            function submitForm(){
-                    $('#ff').form('submit',{
-                        url:'/exp',
-                        onSubmit:function(){
-                            // 解决form不能提交put请求
-                            if (id.value > 0){
-                                $('#ff').append('<input type="hidden" name="_method" value="PUT" />');
-                            }
-                            // 表单验证
-                            return $(this).form('enableValidation').form('validate');
-                        },
-                        success:function (data) {
-                            $('#dlg').dialog('close');
-                            $.messager.show({
-                                title:'温馨提示',
-                                msg:data,
-                                timeout:1000,
-                                showType:'slide'
-                            });
-                            return $('#dg').datagrid('reload');
-                        }
-                });
-            }
-            function clearForm(){
-                $('#ff').form('reset');
-                initime();
-                initcn();
-            }
-
-            // 初始化
-            // 初始化当前系统时间
-            function initime() {
-                var curr_time = new Date();
-                var strDate = curr_time.getFullYear() + "-";
-                strDate += curr_time.getMonth() + 1 + "-";
-                strDate += curr_time.getDate() + "-";
-                strDate += " " + curr_time.getHours() + ":";
-                strDate += curr_time.getMinutes() + ":";
-                strDate += curr_time.getSeconds();
-                $("#exdate").datetimebox("setValue", strDate);
-            }
-            function initcn() {
-                // 初始化name
-                $("#name").combobox({
-                    url:'nameDict',
-                    method:'GET',
-                    valueField:'text',
-                    textField:'text'
-                })
-                // 初始化category
-                $("#category").combobox({
-                    url:'cateDict',
-                    method:'GET',
-                    valueField:'text',
-                    textField:'text'
-                })
-            }
-        </script>
-    </div>
+</div>
 </body>
 </html>
