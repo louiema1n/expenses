@@ -6,10 +6,11 @@ import com.lm.domain.Expenses;
 import com.lm.domain.Footer;
 import com.lm.domain.PageResult;
 import com.lm.service.ExpensesService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/exp")
 public class ExpensesController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("log");
 
     @Autowired
     private ExpensesService expensesService;
@@ -33,6 +36,8 @@ public class ExpensesController {
         PageResult pageResult = new PageResult();
         // arg1 第几页,arg2 pageSize,conut 计算总数
         Page<Object> pageHelper = PageHelper.startPage(page, rows, true);
+
+        LOGGER.info("【查询】所有支出数据。");
 
         // 获取记录
         List<Expenses> expensesList = new ArrayList<>();
@@ -57,6 +62,7 @@ public class ExpensesController {
         pageResult.setRows(expensesList);
         pageResult.setTotal(Integer.parseInt(total.toString()));
         pageResult.setFooter(footerList);
+
         return pageResult;
     }
 
@@ -67,6 +73,12 @@ public class ExpensesController {
      */
     @RequestMapping(value = "", method = RequestMethod.POST)
     public String add(Expenses expenses) {
+        LOGGER.info("【新增】支出记录:" +
+                expenses.getName() + "在" +
+                expenses.getExdate() + "共支出" +
+                expenses.getMoney() + "用于" +
+                expenses.getCategory() + "的" +
+                expenses.getRemark());
         Integer i = this.expensesService.addExpenses(
                 expenses.getCategory(),
                 expenses.getRemark(),
@@ -74,8 +86,10 @@ public class ExpensesController {
                 expenses.getExdate(),
                 expenses.getName());
         if (i > 0) {
+            LOGGER.info("新增成功。");
             return "新增成功。";
         }
+        LOGGER.info("新增失败!");
         return "新增失败！";
     }
 

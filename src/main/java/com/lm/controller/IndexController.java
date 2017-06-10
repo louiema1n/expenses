@@ -1,5 +1,7 @@
 package com.lm.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -9,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class IndexController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger("log");
+
     @RequestMapping("")
     public String index() {
+        LOGGER.info("请求主页成功。");
         return "index";
     }
 
@@ -32,6 +37,11 @@ public class IndexController {
     @RequestMapping("/menu")
     public String menu() {
         return "temp/menu";
+    }
+
+    @RequestMapping("/log")
+    public String log() {
+        return "log";
     }
 
 }

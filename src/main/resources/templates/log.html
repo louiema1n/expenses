@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="common/header :: head">
+</head>
+<body>
+<table class="easyui-datagrid" style="width:700px;height:250px"
+       data-options="
+       singleSelect:true,
+       loadMsg: '正在努力为您加载数据',
+       singleSelect:true,
+       collapsible:false,
+       fit:true,
+       rownumbers:true,
+       striped:true,
+       url:'logevent',
+       remoteSort:false,
+       sortOrder: 'desc',
+       sortName: 'time',
+       method:'get'">
+    <thead>
+    <tr>
+        <th data-options="field:'time',width:150,sortable:'true'">时间</th>
+        <th data-options="field:'level_string',width:80,sortable:'true'">日志级别</th>
+        <th data-options="field:'formatted_message',align:'left',sortable:'true'">日志信息</th>
+        <th data-options="field:'caller_class',sortable:'true'">日志提交者</th>
+    </tr>
+    </thead>
+</table>
+</body>
