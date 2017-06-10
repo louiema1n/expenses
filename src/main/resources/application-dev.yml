@@ -5,5 +5,3 @@ spring:
     url: jdbc:mysql://localhost:3306/home?useSSL=true
     username: root
     password: root
-
-

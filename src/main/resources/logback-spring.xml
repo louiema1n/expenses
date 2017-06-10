@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <contextName>logback</contextName>
+
+    <!-- datasource 配置从yml中获取 -->
+    <springProperty scope="context" name="logdcn" source="spring.datasource.driver-class-name"/>
+    <springProperty scope="context" name="logurl" source="spring.datasource.url"/>
+    <springProperty scope="context" name="logusr" source="spring.datasource.username"/>
+    <springProperty scope="context" name="logpwd" source="spring.datasource.password"/>
+
     <property name="log.path" value="log/logback.log" />
     <!-- 彩色日志 -->
     <property name="CONSOLE_LOG_PATTERN"
@@ -13,21 +20,21 @@
     </appender>
 
     <!--输出到文件-->
-    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logback.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!--日志文件保留天数-->
-            <MaxHistory>30</MaxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-        <!--日志文件最大的大小-->
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <MaxFileSize>10MB</MaxFileSize>
-        </triggeringPolicy>
-    </appender>
+    <!--<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.path}</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>logback.%d{yyyy-MM-dd}.log</fileNamePattern>-->
+            <!--&lt;!&ndash;日志文件保留天数&ndash;&gt;-->
+            <!--<MaxHistory>30</MaxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+        <!--</encoder>-->
+        <!--&lt;!&ndash;日志文件最大的大小&ndash;&gt;-->
+        <!--<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">-->
+            <!--<MaxFileSize>10MB</MaxFileSize>-->
+        <!--</triggeringPolicy>-->
+    <!--</appender>-->
 
     <!--日志异步到数据库-->
     <appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
@@ -35,10 +42,10 @@
         <connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">
             <!--连接池 -->
             <dataSource class="org.apache.commons.dbcp.BasicDataSource">
-                <driverClassName>com.mysql.jdbc.Driver</driverClassName>
-                <url>jdbc:mysql://localhost:3306/home?useSSL=true</url>
-                <username>root</username>
-                <password>root</password>
+                <driverClassName>${logdcn}</driverClassName>
+                <url>${logurl}</url>
+                <username>${logusr}</username>
+                <password>${logpwd}</password>
             </dataSource>
         </connectionSource>
     </appender>
@@ -50,7 +57,7 @@
 
     <root level="info">
         <appender-ref ref="console" />
-        <appender-ref ref="file" />
+        <!--<appender-ref ref="file" />-->
         <!--<appender-ref ref="DB" />-->
     </root>
 
