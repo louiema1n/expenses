@@ -7,6 +7,8 @@ import com.lm.domain.Footer;
 import com.lm.domain.Income;
 import com.lm.domain.PageResult;
 import com.lm.service.IncomeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/inc")
 public class IncomeController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("log");
 
     @Autowired
     private IncomeService incomeService;
@@ -33,6 +37,8 @@ public class IncomeController {
         PageResult pageResult = new PageResult();
         // arg1 第几页,arg2 pageSize,conut 计算总数
         Page<Object> pageHelper = PageHelper.startPage(page, rows, true);
+
+        LOGGER.info("【查询】所有缴纳数据。");
 
         // 获取记录
         List<Income> incomeList = new ArrayList<>();
@@ -67,6 +73,12 @@ public class IncomeController {
      */
     @RequestMapping(value = "", method = RequestMethod.POST)
     public String add(Income income) {
+        LOGGER.info("【新增】缴纳记录：" +
+                income.getName() + "在" +
+                income.getExdate() + "共缴纳" +
+                income.getMoney() + "用于" +
+                income.getCategory() + "的" +
+                income.getRemark());
         Integer i = this.incomeService.addIncome(
                 income.getCategory(),
                 income.getRemark(),
@@ -74,8 +86,10 @@ public class IncomeController {
                 income.getExdate(),
                 income.getName());
         if (i > 0) {
+            LOGGER.info("新增成功。");
             return "新增成功。";
         }
+        LOGGER.info("新增失败!");
         return "新增失败！";
     }
 
@@ -86,6 +100,7 @@ public class IncomeController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public String delete(@PathVariable Integer id) {
+        LOGGER.info("【删除】缴纳记录:" + this.incomeService.findById(id));
         Integer i = this.incomeService.delIncome(id);
         if (i > 0) {
             return "删除成功。";
@@ -100,6 +115,7 @@ public class IncomeController {
      */
     @RequestMapping(value = "", method = RequestMethod.PUT)
     public String update(Income income) {
+        LOGGER.info("【更新前】缴纳记录：" + this.incomeService.findById(income.getId()));
         Integer i = incomeService.upIncome(
                 income.getId(),
                 income.getCategory(),
@@ -108,8 +124,10 @@ public class IncomeController {
                 income.getExdate(),
                 income.getName());
         if (i > 0) {
+            LOGGER.info("【更新后】支出记录：" + income);
             return "修改成功。";
         }
+        LOGGER.info("更新失败");
         return "修改失败！";
     }
 

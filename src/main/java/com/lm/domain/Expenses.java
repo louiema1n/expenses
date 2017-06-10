@@ -62,4 +62,16 @@ public class Expenses {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Expenses{" +
+                "id=" + id +
+                ", category='" + category + '\'' +
+                ", remark='" + remark + '\'' +
+                ", money=" + money +
+                ", exdate='" + exdate + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

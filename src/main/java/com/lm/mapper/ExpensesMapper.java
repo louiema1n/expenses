@@ -24,4 +24,7 @@ public interface ExpensesMapper {
 
     @Select("select * from expenses where exdate >= #{sdate} and exdate <= #{edate}")
     List<Expenses> findByDate(@Param("sdate") String sdate, @Param("edate") String edate);
+
+    @Select("select * from expenses where id = #{id}")
+    Expenses findById(@Param("id") Integer id);
 }

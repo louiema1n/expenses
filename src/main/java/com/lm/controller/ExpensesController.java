@@ -100,6 +100,7 @@ public class ExpensesController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public String delete(@PathVariable Integer id) {
+        LOGGER.info("【删除】支出记录:" + this.expensesService.findById(id));
         Integer i = this.expensesService.delExpenses(id);
         if (i > 0) {
             return "删除成功。";
@@ -114,6 +115,7 @@ public class ExpensesController {
      */
     @RequestMapping(value = "", method = RequestMethod.PUT)
     public String update(Expenses expenses) {
+        LOGGER.info("【更新前】支出记录：" + this.expensesService.findById(expenses.getId()));
         Integer i = expensesService.upExpenses(
                 expenses.getId(),
                 expenses.getCategory(),
@@ -122,8 +124,10 @@ public class ExpensesController {
                 expenses.getExdate(),
                 expenses.getName());
         if (i > 0) {
+            LOGGER.info("【更新后】支出记录：" + expenses);
             return "修改成功。";
         }
+        LOGGER.info("更新失败");
         return "修改失败！";
     }
 

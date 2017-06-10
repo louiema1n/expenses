@@ -24,4 +24,7 @@ public interface IncomeMapper {
 
     @Select("select * from income where exdate >= #{sdate} and exdate <= #{edate}")
     List<Income> findByDate(@Param("sdate") String sdate, @Param("edate") String edate);
+
+    @Select("select * from income where id >= #{id}")
+    Income findById(@Param("id") Integer id);
 }

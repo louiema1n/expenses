@@ -1,6 +1,8 @@
 package com.lm.controller;
 
 import com.lm.service.DictService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 public class DictController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("log");
 
     @Autowired
     private DictService dictService;
@@ -19,6 +23,7 @@ public class DictController {
      */
     @GetMapping("/nameDict")
     public String findName() {
+        LOGGER.info("【查询】所有支出/缴纳人数据");
         return this.dictService.findDict("支出/缴纳人");
     }
 
@@ -27,6 +32,7 @@ public class DictController {
      */
     @PostMapping("/nameDict")
     public void updName(@RequestParam("context") String context) {
+        LOGGER.info("【修改】支出/缴纳人数据字典：" + context);
         this.dictService.updDict("支出/缴纳人", context);
     }
 
@@ -36,6 +42,7 @@ public class DictController {
      */
     @GetMapping("/cateDict")
     public String findCate() {
+        LOGGER.info("【查询】所有支出/缴纳类别数据");
         return this.dictService.findDict("支出/缴纳类别");
     }
 
@@ -44,6 +51,7 @@ public class DictController {
      */
     @PostMapping("/cateDict")
     public void updCate(@RequestParam("context") String context) {
+        LOGGER.info("【修改】支出/缴纳类别数据字典：" + context);
         this.dictService.updDict("支出/缴纳类别", context);
     }
 }

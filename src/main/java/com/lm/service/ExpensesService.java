@@ -35,4 +35,8 @@ public class ExpensesService {
     public List<Expenses> findByDate(String sdate, String edate) {
         return this.expensesMapper.findByDate(sdate, edate);
     }
+
+    public Expenses findById(Integer id) {
+        return this.expensesMapper.findById(id);
+    }
 }

@@ -60,4 +60,16 @@ public class Income {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Income{" +
+                "id=" + id +
+                ", category='" + category + '\'' +
+                ", remark='" + remark + '\'' +
+                ", money=" + money +
+                ", exdate='" + exdate + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

@@ -35,4 +35,8 @@ public class IncomeService {
     public List<Income> findByDate(String sdate, String edate) {
         return this.incomeMapper.findByDate(sdate, edate);
     }
+
+    public Income findById(Integer id) {
+        return this.incomeMapper.findById(id);
+    }
 }
