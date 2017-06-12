@@ -5,6 +5,7 @@ import com.lm.mapper.LogEventMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public class LogEventService {
     @Autowired
     private LogEventMapper logEventMapper;
 
-    public List<LogEvent> findAll() {
-        return this.logEventMapper.all();
+    public List<LogEvent> findAll(BigInteger sdate, BigInteger edate) {
+        return this.logEventMapper.all(sdate, edate);
     }
 }
