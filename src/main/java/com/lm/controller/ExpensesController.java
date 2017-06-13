@@ -131,10 +131,63 @@ public class ExpensesController {
         return "修改失败！";
     }
 
+    /**
+     * 根据日期段查询
+     * @param page
+     * @param rows
+     * @param sdate
+     * @param edate
+     * @return
+     */
     @RequestMapping(value = "/{sdate}/{edate}", method = RequestMethod.GET)
     public PageResult findByDate(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                  @RequestParam(value = "rows", defaultValue = "1") Integer rows,
                                  @PathVariable("sdate") String sdate, @PathVariable("edate") String edate) {
+        PageResult pageResult = new PageResult();
+        // arg1 第几页,arg2 pageSize,conut 计算总数
+        Page<Object> pageHelper = PageHelper.startPage(page, rows, true);
+
+        List<Expenses> expensesList = new ArrayList<>();
+        expensesList = this.expensesService.findByDate(sdate, edate);
+
+        // 获取总记录数
+        Long total = pageHelper.getTotal();
+
+        // 设置footer
+        Footer footer = new Footer();
+        footer.setCategory("支出合计：");
+        double totalMoney = 0;
+        for (Expenses expenses : expensesList) {
+            totalMoney += expenses.getMoney();
+        }
+        footer.setMoney(totalMoney);
+
+        List<Footer> footerList = new ArrayList<>();
+        footerList.add(footer);
+
+        pageResult.setFooter(footerList);
+        pageResult.setRows(expensesList);
+        pageResult.setTotal(Integer.parseInt(total.toString()));
+        return pageResult;
+    }
+
+    /**
+     * 单日期查询
+     * @param page
+     * @param rows
+     * @param date
+     * @return
+     */
+    @RequestMapping(value = "/{date}", method = RequestMethod.GET)
+    public PageResult findByDate(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                                 @RequestParam(value = "rows", defaultValue = "1") Integer rows,
+                                 @PathVariable("date") String date) {
+        String s = date.substring(0, 9);
+        String e = date.substring(9);
+        int temp = Integer.valueOf(e).intValue() + 1;
+        String edate = s + temp + "";
+        String sdate = date;
+
         PageResult pageResult = new PageResult();
         // arg1 第几页,arg2 pageSize,conut 计算总数
         Page<Object> pageHelper = PageHelper.startPage(page, rows, true);

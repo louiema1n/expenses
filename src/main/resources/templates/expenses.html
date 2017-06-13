@@ -48,8 +48,9 @@
         <a onclick="remove()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
         <a onclick="edit()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
         <div>
-            日期: <input id="sdate" class="easyui-datebox" style="width: 100px">
-            至: <input id="edate" class="easyui-datebox" style="width: 100px">
+            <label><input type="radio" name="selectDate" checked="checked" value="single">日期：<input id="date" class="easyui-datebox" style="width: 100px"></label><br>
+            <label><input type="radio" name="selectDate">日期：<input id="sdate" class="easyui-datebox" disabled="true" style="width: 100px">
+            至: <input id="edate" class="easyui-datebox" disabled="true" style="width: 100px"></label>
             <a onclick="sch()" class="easyui-linkbutton" iconCls="icon-search">搜索</a>
         </div>
     </div>
@@ -57,6 +58,44 @@
 
 <!-- 按钮操作绑定-->
 <script type="text/javascript">
+    // 初始化日期选择框的值
+    $(function () {
+        initdate();
+    })
+    // 初始化当前系统日期(页面加载完成后执行)
+    function initdate() {
+        var curr_time = new Date();
+        var strDate = curr_time.getFullYear() + "-";
+        var endDate = curr_time.getFullYear() + "-";
+        strDate += curr_time.getMonth() + 1 + "-";
+        endDate += curr_time.getMonth() + "-";
+        strDate += curr_time.getDate();
+        endDate += curr_time.getDate();
+        strDate += " " + curr_time.getHours() + ":";
+        strDate += curr_time.getMinutes() + ":";
+        strDate += curr_time.getSeconds();
+        $("#date").datebox("setValue", strDate);
+        $("#sdate").datebox("setValue", endDate);
+        $("#edate").datebox("setValue", strDate);
+        sch();
+    };
+
+    // 注册单选框的点击事件
+    $('input[name=selectDate]').click(function () {
+        if ($('input:radio:checked').val() == 'single') {
+            // 禁用datebox
+            $("#sdate").datebox({disabled:true});
+            $("#edate").datebox({disabled:true});
+            $("#date").datebox({disabled:false});
+        }
+        else {
+            $("#sdate").datebox({disabled:false});
+            $("#edate").datebox({disabled:false});
+            $("#date").datebox({disabled:true});
+        };
+        initdate();
+    })
+
     // 新增按钮
     function add() {
         $('#ff').form('reset');
@@ -125,9 +164,13 @@
     ;
     <!-- 搜索 -->
     function sch() {
-        $('#dg').datagrid({url: '/exp/' + $('#sdate').datebox('getValue') + '/' + $('#edate').datebox('getValue')});
-    }
-    ;
+        if ($('input:radio:checked').val() == 'single') {
+            $('#dg').datagrid({url: '/exp/' + $('#date').datebox('getValue')});
+        }
+        else {
+            $('#dg').datagrid({url: '/exp/' + $('#sdate').datebox('getValue') + '/' + $('#edate').datebox('getValue')});
+        }
+    };
 </script>
 
 <!-- 新增表单 -->
