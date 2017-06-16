@@ -5,11 +5,14 @@ import com.github.pagehelper.PageHelper;
 import com.lm.domain.Expenses;
 import com.lm.domain.Footer;
 import com.lm.domain.PageResult;
+import com.lm.domain.UpdImg;
 import com.lm.service.ExpensesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,10 @@ import java.util.List;
 public class ExpensesController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("log");
+
+    // 图片存储地址
+    @Value("${web.updImg-path}")
+    private String path;
 
     @Autowired
     private ExpensesService expensesService;
@@ -72,7 +79,14 @@ public class ExpensesController {
      * @return
      */
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public String add(Expenses expenses) {
+    public String add(Expenses expenses, MultipartFile file) {
+//        System.out.println(file.getOriginalFilename());
+
+        // 上传图片
+        String imgurl = new UpdImg().upload(file, path);
+        // 格式化图片地址
+        expenses.setImgurl("<a href=\"javascript:void(0)\" onclick=\"view('" + imgurl + "')\">查看图片</a>");
+
         LOGGER.info("【新增】支出记录:" +
                 expenses.getName() + "在" +
                 expenses.getExdate() + "共支出" +
@@ -84,7 +98,8 @@ public class ExpensesController {
                 expenses.getRemark(),
                 expenses.getMoney(),
                 expenses.getExdate(),
-                expenses.getName());
+                expenses.getName(),
+                expenses.getImgurl());
         if (i > 0) {
             LOGGER.info("新增成功。");
             return "新增成功。";

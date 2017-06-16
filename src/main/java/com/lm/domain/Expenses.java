@@ -14,6 +14,7 @@ public class Expenses {
     private double money;   //金额
     private String exdate;    //消费时间
     private String name;    // 支出人
+    private String imgurl;
 
     public Integer getId() {
         return id;
@@ -61,6 +62,14 @@ public class Expenses {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImgurl() {
+        return imgurl;
+    }
+
+    public void setImgurl(String imgurl) {
+        this.imgurl = imgurl;
     }
 
     @Override

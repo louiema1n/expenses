@@ -2,6 +2,10 @@
 server:
   port: 80
 
+# 图片存储地址
+web:
+  updImg-path: F:/WorkStation/Java/uploads/
+
 spring:
 # datasource
   profiles:
@@ -22,6 +26,14 @@ spring:
     helper-dialect: mysql
     row-bounds-with-count: true
     reasonable: true
+
+
+# 表示所有的访问都经过静态资源路径；
+  mvc:
+    static-path-pattern: /**
+# 加入所有静态资源路径（覆盖默认配置）
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${web.updImg-path}
 
 
 # 多配置文件

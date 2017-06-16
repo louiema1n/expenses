@@ -29,6 +29,7 @@
         <th data-options="field:'money',width:fixWidth(0.15),sortable:'true'">金额</th>
         <th data-options="field:'exdate',width:fixWidth(0.2),sortable:'true'">消费时间</th>
         <th data-options="field:'name',width:fixWidth(0.25),sortable:'true'">支出人</th>
+        <th data-options="field:'imgurl',width:fixWidth(0.25),sortable:'true'">图片</th>
     </tr>
     </thead>
 </table>
@@ -171,13 +172,23 @@
             $('#dg').datagrid({url: '/exp/' + $('#sdate').datebox('getValue') + '/' + $('#edate').datebox('getValue')});
         }
     };
+    
+    function view(url) {
+        $('#w').window('open');
+        $('#w').html('<img src="' + url + '">');
+    }
+    
 </script>
+
+<!-- 图片显示窗口 -->
+<div id="w" class="easyui-window" title="图片查看" data-options="modal:true,closed:true,fit:true" style="text-align: center">
+</div>
 
 <!-- 新增表单 -->
 <div id="dlg" class="easyui-dialog" closed="true" data-options="buttons:'#dlg-buttons'"
      style="width:450px;height:auto;padding:10px">
     <div style="padding:10px 60px 20px 60px">
-        <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
+        <form id="ff" class="easyui-form" method="post" enctype="multipart/form-data" data-options="novalidate:true">
             <table cellpadding="5">
                 <!-- 隐藏域id -->
                 <input type="hidden" id="id" name="id">
@@ -210,6 +221,9 @@
                     <select id="name" name="name" class="easyui-combobox" required="true" label="支出人:"
                             style="width:100%">
                     </select>
+                </div>
+                <div style="margin-bottom:10px">
+                    <p>图片：<input type="file" name="file"></p>
                 </div>
             </table>
         </form>

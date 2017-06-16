@@ -20,8 +20,8 @@ public class ExpensesService {
         return this.expensesMapper.findAll();
     }
 
-    public Integer addExpenses(String category, String remark, Double money, String exdate, String name) {
-        return this.expensesMapper.add(category, remark, money, exdate, name);
+    public Integer addExpenses(String category, String remark, Double money, String exdate, String name, String imgurl) {
+        return this.expensesMapper.add(category, remark, money, exdate, name, imgurl);
     }
 
     public Integer delExpenses(Integer id) {

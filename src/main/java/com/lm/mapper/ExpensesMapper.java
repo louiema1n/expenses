@@ -13,8 +13,13 @@ public interface ExpensesMapper {
     @Select("select * from expenses")
     List<Expenses> findAll();
 
-    @Insert("insert into expenses(category,remark,money,exdate,name) values(#{category},#{remark},#{money},#{exdate},#{name})")
-    Integer add(@Param("category") String category, @Param("remark") String remark, @Param("money") Double money, @Param("exdate") String exdate, @Param("name")String name);
+    @Insert("insert into expenses(category,remark,money,exdate,name,imgurl) values(#{category},#{remark},#{money},#{exdate},#{name},#{imgurl})")
+    Integer add(@Param("category") String category,
+                @Param("remark") String remark,
+                @Param("money") Double money,
+                @Param("exdate") String exdate,
+                @Param("name")String name,
+                @Param("imgurl") String imgurl);
 
     @Delete("delete from expenses where id = #{id}")
     Integer delete(@Param("id") Integer id);
