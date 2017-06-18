@@ -1,5 +1,5 @@
 # expenses
-springboot+easyui支出记录
+springboot+easyui+bootstrap支出记录
 
 # 2017-5-31 更新
 1、将jQuery、EasyUI引用部分作用common模板使用\
@@ -33,3 +33,7 @@ springboot+easyui支出记录
 
 # 2017-6-16 更新
 1、新增支出列表支持图片上传及预览\
+
+# 2017-6-18 更新
+1、集成Shiro实现登录功能\
+2、新增login界面

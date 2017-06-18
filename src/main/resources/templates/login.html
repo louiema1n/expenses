@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>登录</title>
+	
+	<link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{/bootstrap/css/animate.css}">
+	<link rel="stylesheet" th:href="@{/bootstrap/css/style.css}">
+	<link rel="stylesheet" th:href="@{/bootstrapvalidator/css/bootstrapValidator.min.css}">
+
+	<!-- jQuery -->
+	<script type="text/javascript" th:src="@{/easyui/jquery.min.js}"></script>
+
+	</head>
+	<body class="style-3">
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-md-push-9">
+					<!-- Start Sign In Form -->
+					<form action="/login" method="post" class="fh5co-form animate-box" data-animate-effect="fadeInRight">
+						<h2>登录</h2>
+						<!-- 错误信息 -->
+						<p style="color: red" th:text="${errMsg}"></p>
+						<div class="form-group">
+							<input type="text" class="form-control" id="username" name="username" placeholder="用户名" autocomplete="on">
+						</div>
+						<div class="form-group">
+							<input type="password" class="form-control" name="password" placeholder="密码" autocomplete="off">
+						</div>
+						<div class="form-group">
+							<label><input type="checkbox" name="remember"> 记住我</label>
+						</div>
+						<div class="form-group">
+							<p>没有注册? <a href="#">注册</a> | <a href="#">忘记密码?</a></p>
+						</div>
+						<div class="form-group">
+							<input type="submit" name="commit" value="登录" class="btn btn-primary">
+							<input type="button" value="注册" class="btn btn-info">
+						</div>
+					</form>
+					<!-- END Sign In Form -->
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+            $(function () {
+                // 默认焦点
+                $("#username").focus();
+                $('form').bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        username: {
+                            message: '用户名验证失败',
+                            validators: {
+                                notEmpty: {
+                                    message: '用户名不能为空'
+                                }
+                            }
+                        },
+                        password: {
+                            validators: {
+                                notEmpty: {
+                                    message: '密码不能为空'
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+		</script>
+	
+
+	<!-- Bootstrap -->
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- Placeholder -->
+	<script th:src="@{/bootstrap/js/jquery.placeholder.min.js}"></script>
+	<!-- Waypoints -->
+	<script th:src="@{/bootstrap/js/jquery.waypoints.min.js}"></script>
+	<!-- Main JS -->
+	<script th:src="@{/bootstrap/js/main.js}"></script>
+
+	<script th:src="@{/bootstrapvalidator/js/bootstrapValidator.min.js}"></script>
+
+	</body>
+</html>
+
