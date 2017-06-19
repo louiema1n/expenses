@@ -37,3 +37,7 @@ springboot+easyui+bootstrap支出记录
 # 2017-6-18 更新
 1、集成Shiro实现登录功能\
 2、新增login界面
+
+# 2017-6-19 更新
+1、实现salt\
+2、实现user的增删改

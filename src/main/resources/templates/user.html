@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="common/header :: head">
+</head>
+<body>
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'center',border:false">
+        <table id="dg" class="easyui-datagrid" style="width:700px;height:auto"
+               data-options="
+				iconCls:'icon-edit',
+				singleSelect: true,
+				toolbar: '#tb',
+				fitColumns:true,
+				fit:true,
+				rownumbers:true,
+				url:'/user/all',
+				method:'GET'">
+            <thead>
+            <tr>
+                <th data-options="field:'uid',width:30">ID</th>
+                <th data-options="field:'name',width:50">用户别名</th>
+                <th data-options="field:'username',width:100">用户名</th>
+                <th data-options="field:'password',width:180">密码</th>
+                <th data-options="field:'salt',width:180">加密盐</th>
+                <th data-options="field:'state',width:180,
+                                formatter:function(value,row){
+                                    if(value == 0 ) {
+                                        return '未激活';
+                                    }if(value == 1 ) {
+                                        return '正常';
+                                    }if(value == 2 ) {
+                                        return '已锁定';
+                                    }if(value == 3 ) {
+                                        return '已停用';
+                                    }
+                                }">用户状态
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<!-- 工具栏 -->
+<div id="tb" style="height:auto">
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
+       onclick="add()">添加</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"
+       onclick="edit()">修改</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
+    onclick="remove()">删除</a>
+</div>
+
+<!-- 新增表单 -->
+<div id="dlg" class="easyui-dialog" closed="true" data-options="buttons:'#dlg-buttons'"
+     style="width:450px;height:auto;padding:10px">
+    <div style="padding:10px 60px 20px 60px">
+        <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
+            <table cellpadding="5">
+                <!-- 隐藏域id -->
+                <input type="hidden" id="uid" name="uid">
+                <div style="margin-bottom:20px;font-size:14px;border-bottom:1px solid #ccc">用户信息</div>
+
+                <div style="margin-bottom:10px">
+                    <select id="name" name="name" class="easyui-combobox" required="true" label="用户类别:"
+                            style="width:100%">
+                    </select>
+                </div>
+
+                <div style="margin-bottom:10px">
+                    <input name="username" class="easyui-textbox" required="true" label="用户名:" style="width:100%">
+                    </input>
+                </div>
+
+                <div style="margin-bottom:10px">
+                    <input name="password" class="easyui-textbox" required="true" label="密码:"
+                           style="width:100%">
+                    </input>
+                </div>
+
+                <div style="margin-bottom:10px">
+                    <select id="state" name="state" class="easyui-combobox" required="true" label="用户状态:"
+                            style="width:100%">
+                    </select>
+                </div>
+            </table>
+        </form>
+        <div style="padding:5px" id="dlg-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px"
+               onclick="submitForm()">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" style="width:90px"
+               onclick="clearForm()">重置</a>
+        </div>
+    </div>
+</div>
+
+<!-- 按钮操作 -->
+<script type="text/javascript">
+    // 新增按钮
+    function add() {
+        $('#ff').form('reset');
+        init();
+        $('#dlg').dialog({
+            title: '新增',
+            closed: false,
+            modal: true,
+            iconCls: 'icon-save'
+        });
+    };
+    <!-- 删除按钮 -->
+    function remove() {
+        // 获取当前选中行
+        var row = $('#dg').datagrid('getSelected');
+        if (row) {
+            $.messager.confirm('确认', '确定要删除选择的记录吗?', function (r) {
+                if (r) {
+                    $.ajax({
+                        url: '/user/del/' + row.uid, type: 'DELETE', success: function (result) {
+                            $.messager.show({
+                                title: '温馨提示',
+                                msg: result,
+                                timeout: 1000,
+                                showType: 'slide'
+                            });
+                            $('#dg').datagrid('reload');//删除后重新加载下
+                        }
+                    });
+                }
+            });
+        } else {
+            $.messager.show({
+                title: '温馨提示',
+                msg: '请选择需要删除行。',
+                timeout: 1000,
+                showType: 'slide'
+            });
+        }
+    };
+    <!-- 修改按钮 -->
+    function edit() {
+        // 获取当前选中行
+        var row = $('#dg').datagrid('getSelected');
+        if (row) {
+            $('#dlg').dialog({
+                title: '修改',
+                closed: false,
+                modal: true,
+                iconCls: 'icon-edit'
+            });
+            $('#ff').form('load', row);
+            init();
+        } else {
+            $.messager.show({
+                title: '温馨提示',
+                msg: '请选择需要修改行。',
+                timeout: 1000,
+                showType: 'slide'
+            });
+        }
+    };
+    <!-- 提交 -->
+    function submitForm() {
+        $('#ff').form('submit', {
+            url: '/user/add',
+            onSubmit: function () {
+                // 解决form不能提交put请求
+                if (uid.value > 0) {
+                    $('#ff').append('<input type="hidden" name="_method" value="PUT" />');
+                }
+                // 表单验证
+                return $(this).form('enableValidation').form('validate');
+            },
+            success: function (data) {
+                $('#dlg').dialog('close');
+                $.messager.show({
+                    title: '温馨提示',
+                    msg: data,
+                    timeout: 1000,
+                    showType: 'slide'
+                });
+                return $('#dg').datagrid('reload');
+            }
+        });
+    }
+    <!-- 重置 -->
+    function clearForm() {
+        $('#ff').form('reset');
+        init();
+    }
+
+    // 初始化name、state
+    function init() {
+        $("#name").combobox({
+            url: 'nameCDict',
+            method: 'GET',
+            valueField: 'text',
+            textField: 'text'
+        });
+        $("#state").combobox({
+            url: 'stateDict',
+            method: 'GET',
+            valueField: 'id',
+            textField: 'text'
+        });
+    }
+
+</script>
+</body>
+</html>

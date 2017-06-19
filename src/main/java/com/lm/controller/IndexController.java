@@ -85,4 +85,18 @@ public class IndexController {
         return "log";
     }
 
+    @RequestMapping("/user")
+    public String user() {
+        return "user";
+    }
+
+    @RequestMapping("/role")
+    public String role() {
+        return "role";
+    }
+
+    @RequestMapping("/permission")
+    public String permission() {
+        return "permission";
+    }
 }
