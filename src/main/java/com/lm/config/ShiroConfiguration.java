@@ -2,10 +2,13 @@ package com.lm.config;
 
 import com.lm.realm.MyShiroRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -41,8 +44,8 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/easyui/**", "anon");
         filterChainDefinitionMap.put("/img/**", "anon");
         // 配置记住我或验证通过可以访问的url
-//        filterChainDefinitionMap.put("/index", "user");
-//        filterChainDefinitionMap.put("/", "user");
+        filterChainDefinitionMap.put("/index", "user");
+        filterChainDefinitionMap.put("/", "user");
         // 设置所有url都需要验证才能访问
         filterChainDefinitionMap.put("/**", "authc");
 
@@ -66,6 +69,10 @@ public class ShiroConfiguration {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 注入自定义realm
         securityManager.setRealm(myShiroRealm());
+        // 注入缓存管理器
+        securityManager.setCacheManager(ehCacheManager());
+        // 注入rememberMe Cookie管理器
+        securityManager.setRememberMeManager(cookieRememberMeManager());
         return securityManager;
     }
 
@@ -87,7 +94,7 @@ public class ShiroConfiguration {
      */
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
-        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        HashedCredentialsMatcher hashedCredentialsMatcher = new RetryLimitHashedCredentialsMatcher(ehCacheManager());
         // 设置算法
         hashedCredentialsMatcher.setHashAlgorithmName("md5");
         // 散列次数
@@ -106,4 +113,41 @@ public class ShiroConfiguration {
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return authorizationAttributeSourceAdvisor;
     }
+
+    /**
+     * Ehcache缓存管理器
+     * @return
+     */
+    @Bean
+    public EhCacheManager ehCacheManager() {
+        EhCacheManager ehCacheManager = new EhCacheManager();
+        // 加载Ehcache-shiro配置文件
+        ehCacheManager.setCacheManagerConfigFile("classpath:config/ehcache-shiro.xml");
+        return ehCacheManager;
+    }
+
+    /**
+     * rememberMe Cookie对象
+     * @return
+     */
+    @Bean
+    public SimpleCookie rememberMeCookie() {
+        // cookie name对应前端CheckBox的name
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        // 设置cookie生效时间，单位：秒
+        simpleCookie.setMaxAge(1 * 60);
+        return simpleCookie;
+    }
+
+    /**
+     * rememberMe Cookie管理器
+     * @return
+     */
+    @Bean
+    public CookieRememberMeManager cookieRememberMeManager() {
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        return cookieRememberMeManager;
+    }
+
 }

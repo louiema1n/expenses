@@ -3,6 +3,7 @@ package com.lm.controller.shiro;
 import com.lm.domain.shiro.User;
 import com.lm.service.shiro.UserService;
 import com.lm.utils.MD5Password;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +24,11 @@ public class UserController {
     private UserService userService;
 
     /**
-     * 获取所有user数据
+     * 获取所有user数据（不包含已停用的）
      * @return
      */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @RequiresPermissions("user:view")
     public List<User> users() {
         return this.userService.all();
     }
@@ -35,6 +37,7 @@ public class UserController {
      * 新增user
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions("user:add")
     public String add(User user) throws NoSuchAlgorithmException {
         // 将user进行密码加密
         MD5Password.md5PasswordUser(user);
@@ -55,6 +58,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/del/{uid}",method = RequestMethod.DELETE)
+    @RequiresPermissions("user:del")
     public String del(@PathVariable("uid") long uid) {
         int i = this.userService.del(uid);
         if (i > 0) {
@@ -68,6 +72,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.PUT)
+    @RequiresPermissions("user:edit")
     public String upd(User user) {
         // 获取user加密
         MD5Password.md5PasswordUser(user);

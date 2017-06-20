@@ -41,3 +41,10 @@ springboot+easyui+bootstrap支出记录
 # 2017-6-19 更新
 1、实现salt\
 2、实现user的增删改
+
+# 2017-6-20 更新
+1、新增rememberMe功能的实现\
+2、集成ehcache\
+3、实现连续密码错误5次即锁定\
+4、解决doGetAuthorizationInfo不执行（加入aspectjweaver依赖）\
+5、controller权限控制功能实现

@@ -1,7 +1,9 @@
 package com.lm.controller;
 
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -51,6 +53,8 @@ public class IndexController {
                 errMsg = "密码错误";
             } else if ("kaptchaValidateFailed".equals(exception)) {
                 errMsg = "验证码错误";
+            } else if (ExcessiveAttemptsException.class.getName().equals(exception)) {
+                errMsg = "密码连续错误5次，用户被锁定1分钟" ;
             } else {
                 errMsg = exception;
             }

@@ -7,7 +7,7 @@ import java.util.List;
  * Created by Louie on 2017-06-18.
  */
 public class User {
-    private Long uid;
+    private long uid;
     private String name;
     private String password;
     private String salt;
@@ -19,11 +19,11 @@ public class User {
         return this.username + this.salt;
     }
 
-   public Long getUid() {
+   public long getUid() {
         return uid;
     }
 
-    public void setUid(Long uid) {
+    public void setUid(long uid) {
         this.uid = uid;
     }
 

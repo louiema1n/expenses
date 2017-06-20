@@ -23,7 +23,7 @@ public interface UserMapper {
             @Param("state") byte state,
             @Param("username") String username);
 
-    @Delete("delete from sys_user where uid = #{uid}")
+    @Update("update sys_user set state = 3 where uid = #{uid}")
     Integer delete(@Param("uid") long uid);
 
     @Update("update sys_user set name = #{name}, password = #{password}, salt = #{salt}, state = #{state}, username = #{username} where uid = #{uid}")

@@ -17,8 +17,7 @@
 				method:'GET'">
             <thead>
             <tr>
-                <th data-options="field:'uid',width:30">ID</th>
-                <th data-options="field:'name',width:50">用户别名</th>
+                <th data-options="field:'name',width:50">用户类别</th>
                 <th data-options="field:'username',width:100">用户名</th>
                 <th data-options="field:'password',width:180">密码</th>
                 <th data-options="field:'salt',width:180">加密盐</th>
@@ -48,7 +47,7 @@
     <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"
        onclick="edit()">修改</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
-    onclick="remove()">删除</a>
+    onclick="remove()">停用</a>
 </div>
 
 <!-- 新增表单 -->
@@ -73,7 +72,7 @@
                 </div>
 
                 <div style="margin-bottom:10px">
-                    <input name="password" class="easyui-textbox" required="true" label="密码:"
+                    <input name="password" class="easyui-textbox" type="password" required="true" label="密码:"
                            style="width:100%">
                     </input>
                 </div>
@@ -147,8 +146,8 @@
                 modal: true,
                 iconCls: 'icon-edit'
             });
-            $('#ff').form('load', row);
             init();
+            $('#ff').form('load', row);
         } else {
             $.messager.show({
                 title: '温馨提示',
@@ -178,7 +177,7 @@
                     timeout: 1000,
                     showType: 'slide'
                 });
-                return $('#dg').datagrid('reload');
+                $('#dg').datagrid('reload');
             }
         });
     }
