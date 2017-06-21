@@ -92,4 +92,42 @@ public class DictController {
         LOGGER.info("【修改】用户状态数据字典：" + context);
         this.dictService.updDict("用户状态", context);
     }
+
+    /**
+     * 获取角色状态
+     * @return
+     */
+    @GetMapping("/availableDict")
+    public String findAvailable() {
+        LOGGER.info("【查询】所有角色状态数据");
+        return this.dictService.findDict("角色状态");
+    }
+
+    /**
+     * 修改角色状态
+     */
+    @PostMapping("/availableDict")
+    public void updAvailable(@RequestParam("context") String context) {
+        LOGGER.info("【修改】角色状态数据字典：" + context);
+        this.dictService.updDict("角色状态", context);
+    }
+
+    /**
+     * 获取资源类型
+     * @return
+     */
+    @GetMapping("/resourceTypeDict")
+    public String findResourceType() {
+        LOGGER.info("【查询】所有资源类型数据");
+        return this.dictService.findDict("资源类型");
+    }
+
+    /**
+     * 修改资源类型
+     */
+    @PostMapping("/resourceTypeDict")
+    public void updResourceType(@RequestParam("context") String context) {
+        LOGGER.info("【修改】资源类型数据字典：" + context);
+        this.dictService.updDict("资源类型", context);
+    }
 }

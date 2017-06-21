@@ -19,4 +19,21 @@ public class PermissionService {
     public List<Permission> findPerByRoleid(long roleId) {
         return this.permissionMapper.findPerByRoleid(roleId);
     }
+
+    public List<Permission> all() {
+        return this.permissionMapper.all();
+    }
+
+    public Integer add(String name, String permission, String resource_type, String url, Boolean available) {
+        return this.permissionMapper.add(name, permission, resource_type, url, available);
+    }
+
+    public Integer upd(long id, String name, String permission, String resource_type, String url, Boolean available) {
+        return this.permissionMapper.update(id, name, permission, resource_type, url, available);
+    }
+
+    public Integer del(long id) {
+        return this.permissionMapper.delete(id);
+    }
 }
+

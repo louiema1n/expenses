@@ -48,3 +48,9 @@ springboot+easyui+bootstrap支出记录
 3、实现连续密码错误5次即锁定\
 4、解决doGetAuthorizationInfo不执行（加入aspectjweaver依赖）\
 5、controller权限控制功能实现
+
+# 2017-6-21 更新
+1、解决“validation failed for object”问题（实体前加@Valid，后加BindingResult bindingResult）\
+2、实现连续6次输错密码即永久锁定用户\
+3、实现role、permission的维护功能
+4、thymeleaf实现shiro标签权限控制

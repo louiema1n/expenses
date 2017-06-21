@@ -5,11 +5,10 @@ import com.lm.service.shiro.UserService;
 import com.lm.utils.MD5Password;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class UserController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @RequiresPermissions("user:add")
-    public String add(User user) throws NoSuchAlgorithmException {
+    public String add(@Valid User user, BindingResult bindingResult) throws NoSuchAlgorithmException {
         // 将user进行密码加密
         MD5Password.md5PasswordUser(user);
         int i = this.userService.add(
@@ -87,5 +86,37 @@ public class UserController {
             return "修改成功。";
         }
         return "修改失败!";
+    }
+
+    /**
+     * 通过username获取user
+     * @param username
+     * @return
+     */
+    @RequestMapping(value = "/findUserByUsername/{username}", method = RequestMethod.GET)
+    public User findUserByUsername(@PathVariable("username") String username) {
+        return this.userService.findByUsername(username);
+    }
+
+    /**
+     * 根据用户id修改password
+     * @param user，newpassword
+     * @return
+     */
+    @RequestMapping(value = "/changePwd", method = RequestMethod.PUT)
+    public String changePwd(User user, @RequestParam("newpassword") String newpassword) {
+        user.setPassword(newpassword);
+        MD5Password.md5PasswordUser(user);
+        int i = this.userService.upd(
+                user.getUid(),
+                user.getName(),
+                user.getPassword(),
+                user.getSalt(),
+                user.getState(),
+                user.getUsername());
+        if (i > 0) {
+            return "密码修改成功。";
+        }
+        return "密码修改失败!";
     }
 }

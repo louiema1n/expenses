@@ -1,5 +1,6 @@
 package com.lm.config;
 
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.lm.realm.MyShiroRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
@@ -148,6 +149,15 @@ public class ShiroConfiguration {
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
         cookieRememberMeManager.setCookie(rememberMeCookie());
         return cookieRememberMeManager;
+    }
+
+    /**
+     * thymeleaf继承shiro标签
+     * @return
+     */
+    @Bean
+    public ShiroDialect shiroDialect() {
+        return new ShiroDialect();
     }
 
 }

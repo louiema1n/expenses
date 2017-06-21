@@ -19,4 +19,20 @@ public class RoleService {
     public List<Role> findRoleByUid(long uid) {
         return this.roleMapper.findRoleByUid(uid);
     }
+
+    public List<Role> all() {
+        return this.roleMapper.all();
+    }
+
+    public Integer add(String description, String role, Boolean available) {
+        return this.roleMapper.add(description, role, available);
+    }
+
+    public Integer upd(long id, String description, String role, Boolean available) {
+        return this.roleMapper.update(id, description, role, available);
+    }
+
+    public Integer del(long id) {
+        return this.roleMapper.delete(id);
+    }
 }

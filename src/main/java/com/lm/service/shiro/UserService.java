@@ -35,4 +35,12 @@ public class UserService {
     public Integer upd(long uid, String name, String password, String salt, byte state, String username) {
         return this.userMapper.update(uid, name, password, salt, state, username);
     }
+
+    /**
+     * 根据用户名锁定用户
+     * @param username
+     */
+    public void lockUserByUsername(String username) {
+        this.userMapper.lockUserByUsername(username);
+    }
 }

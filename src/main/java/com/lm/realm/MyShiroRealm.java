@@ -6,10 +6,7 @@ import com.lm.domain.shiro.User;
 import com.lm.service.shiro.PermissionService;
 import com.lm.service.shiro.RoleService;
 import com.lm.service.shiro.UserService;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -39,8 +36,6 @@ public class MyShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        System.out.println("权限控制开始了");
-
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 
         // 获取当前登录用户
@@ -70,14 +65,17 @@ public class MyShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        System.out.println("身份验证开始...");
-
         // 获取输入的用户名
         String username = (String) token.getPrincipal();
         // 查询数据库是否有此用户名
         User user = this.userService.findByUsername(username);
         if (user == null) {
-            return null;
+            // 用户名不存在
+            throw new UnknownAccountException();
+        }
+        if (user.getState() == 2) {
+            // 已锁定
+            throw new LockedAccountException();
         }
 
         // 进行密码验证

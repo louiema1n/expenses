@@ -1,6 +1,8 @@
 package com.lm.controller.shiro;
 
+import com.lm.domain.shiro.Permission;
 import com.lm.domain.shiro.Role;
+import com.lm.service.shiro.PermissionService;
 import com.lm.service.shiro.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -16,32 +18,34 @@ import java.util.List;
  * Created by Louie on 2017-06-20.
  */
 @RestController
-@RequestMapping("/role")
-public class RoleController {
+@RequestMapping("/permission")
+public class PermissionController {
 
     @Autowired
-    private RoleService roleService;
+    private PermissionService permissionService;
 
     /**
-     * 查询所有role
+     * 查询所有permission
      * @return
      */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public List<Role> all() {
-        return this.roleService.all();
+    public List<Permission> all() {
+        return this.permissionService.all();
     }
 
     /**
-     * 新增role
-     * @param role
+     * 新增permission
+     * @param permission
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@Valid Role role, BindingResult bindingResult) {
-        int i = this.roleService.add(
-                role.getDescription(),
-                role.getRole(),
-                role.getAvailable()
+    public String add(@Valid Permission permission, BindingResult bindingResult) {
+        int i = this.permissionService.add(
+                permission.getName(),
+                permission.getPermission(),
+                permission.getResource_type(),
+                permission.getUrl(),
+                permission.getAvailable()
         );
         if (i > 0) {
             return "新增成功";
@@ -50,17 +54,19 @@ public class RoleController {
     }
 
     /**
-     * 修改role
-     * @param role
+     * 修改permission
+     * @param permission
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.PUT)
-    public String upd(Role role) {
-        int i = this.roleService.upd(
-                role.getId(),
-                role.getDescription(),
-                role.getRole(),
-                role.getAvailable()
+    public String upd(Permission permission) {
+        int i = this.permissionService.upd(
+                permission.getId(),
+                permission.getName(),
+                permission.getPermission(),
+                permission.getResource_type(),
+                permission.getUrl(),
+                permission.getAvailable()
         );
         if (i > 0) {
             return "修改成功";
@@ -69,13 +75,13 @@ public class RoleController {
     }
 
     /**
-     * 停用role
+     * 停用permission
      * @param id
      * @return
      */
     @RequestMapping(value = "/del/{id}", method = RequestMethod.DELETE)
     public String del(@PathVariable("id") long id) {
-        int i = this.roleService.del(id);
+        int i = this.permissionService.del(id);
         if (i > 0) {
             return "停用成功";
         }

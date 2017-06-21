@@ -35,4 +35,7 @@ public interface UserMapper {
             @Param("state") byte state,
             @Param("username") String username);
 
+    @Update("update sys_user set state = 2 where username = #{username}")
+    Integer lockUserByUsername(@Param("username") String username);
+
 }

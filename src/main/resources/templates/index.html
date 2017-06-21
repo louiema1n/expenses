@@ -1,11 +1,111 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <title>欢迎使用消费记录系统</title>
     <head th:replace="common/header :: head"></head>
 </head>
 <body class="easyui-layout" data-options="fit:true">
-    <div data-options="region:'north'" style="height: 80px;background-image:url(/img/banner.png);"></div>
+    <div data-options="region:'north'" style="height: 80px;background-image:url(/img/banner.png);">
+        <div style="text-align: right;margin: 50px 40px 0px 0px">
+            <span style="color: red;font-size: 18px" id="mb" class="easyui-menubutton"data-options="menu:'#mm'"><shiro:principal/></span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/logout">退出登录</a>
+        </div>
+        <!--菜单内容-->
+        <div id="mm" style="width:150px;">
+            <div data-options="iconCls:'icon-advancedsettings'" onclick="changePwd()">修改密码</div>
+            <div class="menu-sep"></div>
+        </div>
+        <script type="text/javascript">
+            <!-- 修改密码 -->
+            function changePwd() {
+                $("#dlg").dialog({
+                    title: '修改密码',
+                    closed: false,
+                    modal: true,
+                    iconCls: 'icon-advancedsettings'
+                });
+                $("#ff").form('load','/user/findUserByUsername/' + $("#mb").text());
+            }
+            <!-- 提交 -->
+            function submitForm() {
+                $('#ff').form('submit', {
+                    url: '/user/changePwd',
+                    onSubmit: function () {
+                        $('#ff').append('<input type="hidden" name="_method" value="PUT" />');
+                        // 表单验证
+                        return $(this).form('enableValidation').form('validate');
+                    },
+                    success: function (data) {
+                        $('#dlg').dialog('close');
+                        $.messager.show({
+                            title: '温馨提示',
+                            msg: data,
+                            timeout: 1000,
+                            showType: 'slide'
+                        });
+                        $('#dg').datagrid('reload');
+                    }
+                });
+            }
+            <!-- 重置 -->
+            function clearForm() {
+                $('#ff').form('reset');
+                $("#ff").form('load','/user/findUserByUsername/' + $("#mb").text());
+            }
+            <!-- 判断确认密码是否一致 -->
+            $.extend($.fn.validatebox.defaults.rules, {
+                equalTo: {
+                    validator:function(value,param){
+                        return $(param[0]).val() == value;
+                    },
+                    message:'字段不匹配'
+                }
+            })
+        </script>
+        <!-- 修改密码表单 -->
+        <div id="dlg" class="easyui-dialog" closed="true" data-options="buttons:'#dlg-buttons'"
+             style="width:450px;height:auto;padding:10px">
+            <div style="padding:10px 60px 20px 60px">
+                <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
+                    <table cellpadding="5">
+                        <!-- 隐藏域 -->
+                        <input type="hidden" id="uid" name="uid">
+                        <input type="hidden" name="password">
+                        <input type="hidden" name="state">
+                        <div style="margin-bottom:20px;font-size:14px;border-bottom:1px solid #ccc">修改密码</div>
+
+                        <div style="margin-bottom:10px">
+                            <input name="name" class="easyui-textbox" readonly="readonly" label="用户类别:"
+                                   style="width:100%">
+                            </input>
+                        </div>
+                        <div style="margin-bottom:10px">
+                            <input name="username" class="easyui-textbox" readonly="readonly" label="用户名:"
+                                   style="width:100%">
+                            </input>
+                        </div>
+
+                        <div style="margin-bottom:10px">
+                            <input id="newpassword" name="newpassword" class="easyui-textbox" type="password" required="true" label="新密码:"
+                                   style="width:100%">
+                            </input>
+                        </div>
+
+                        <div style="margin-bottom:10px">
+                            <input id="repassword" class="easyui-textbox" type="password" required="true" validType="equalTo['#newpassword']" invalidMessage="两次输入密码不匹配" label="确认密码:"
+                                   style="width:100%">
+                            </input>
+                        </div>
+                    </table>
+                </form>
+                <div style="padding:5px" id="dlg-buttons">
+                    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px"
+                       onclick="submitForm()">提交</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" style="width:90px"
+                       onclick="clearForm()">重置</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <div data-options="region:'west',split:true,title:'菜单导航'" style="width:200px;">
         <div class="easyui-accordion" data-options="fit:true,border:false">
             <div title="记录选择" data-options="selected:true,iconCls:'icon-application-cascade'" style="overflow:hidden;padding-top: 5px">

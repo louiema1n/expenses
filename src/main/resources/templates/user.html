@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head th:insert="common/header :: head">
 </head>
 <body>
@@ -42,11 +42,11 @@
 
 <!-- 工具栏 -->
 <div id="tb" style="height:auto">
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
+    <a shiro:hasPermission="user:add" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
        onclick="add()">添加</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"
+    <a shiro:hasPermission="user:edit" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"
        onclick="edit()">修改</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
+    <a shiro:hasPermission="user:del" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
     onclick="remove()">停用</a>
 </div>
 

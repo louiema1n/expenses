@@ -1,7 +1,5 @@
 package com.lm.domain.shiro;
 
-import java.util.List;
-
 /**
  * 权限实体
  * Created by Louie on 2017-06-18.
@@ -15,7 +13,7 @@ public class Permission {
     private String parentIds;
 
     private String permission;
-    private String resourceType;
+    private String resource_type;
     private String url;
 
     public long getId() {
@@ -66,12 +64,12 @@ public class Permission {
         this.permission = permission;
     }
 
-    public String getResourceType() {
-        return resourceType;
+    public String getResource_type() {
+        return resource_type;
     }
 
-    public void setResourceType(String resourceType) {
-        this.resourceType = resourceType;
+    public void setResource_type(String resource_type) {
+        this.resource_type = resource_type;
     }
 
     public String getUrl() {

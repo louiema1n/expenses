@@ -2,6 +2,7 @@ package com.lm.controller;
 
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -47,6 +48,9 @@ public class IndexController {
         // 回显errMsg
         String errMsg = "";
         if (exception != null) {
+            /**
+             * DisabledAccountException（禁用的帐号）、LockedAccountException（锁定的帐号）、ExpiredCredentialsException（过期的凭证）
+             */
             if (UnknownAccountException.class.getName().equals(exception)) {
                 errMsg = "用户名不存在";
             } else if (IncorrectCredentialsException.class.getName().equals(exception)) {
@@ -54,7 +58,9 @@ public class IndexController {
             } else if ("kaptchaValidateFailed".equals(exception)) {
                 errMsg = "验证码错误";
             } else if (ExcessiveAttemptsException.class.getName().equals(exception)) {
-                errMsg = "密码连续错误5次，用户被锁定1分钟" ;
+                errMsg = "密码连续错误5次，用户被锁定1分钟。如果继续错误，用户将被永久锁定！" ;
+            } else if (LockedAccountException.class.getName().equals(exception)) {
+                errMsg = "该用户已被永久锁定，无法登录！";
             } else {
                 errMsg = exception;
             }
