@@ -12,16 +12,16 @@
 				toolbar: '#tb',
 				fitColumns:true,
 				fit:true,
+				nowrap:false,
 				rownumbers:true,
 				url:'/user/all',
 				method:'GET'">
             <thead>
             <tr>
                 <th data-options="field:'name',width:50">用户类别</th>
-                <th data-options="field:'username',width:100">用户名</th>
-                <th data-options="field:'password',width:180">密码</th>
-                <th data-options="field:'salt',width:180">加密盐</th>
-                <th data-options="field:'state',width:180,
+                <th data-options="field:'username',width:80">用户名</th>
+                <th data-options="field:'password',width:80">密码</th>
+                <th data-options="field:'state',width:80,
                                 formatter:function(value,row){
                                     if(value == 0 ) {
                                         return '未激活';
@@ -32,8 +32,19 @@
                                     }if(value == 3 ) {
                                         return '已停用';
                                     }
-                                }">用户状态
+                                },
+                                styler: function(value,index,row){
+                                    if (value == 3){
+                                        return 'color:#ff0000;'; // return inline style
+                                        <!--return 'background-color:#ff0000;color:#ff0000;'; // return inline style-->
+                                        // the function can return predefined css class and inline style
+                                        // return {class:'r1', style:{'color:#fff'}};
+                                    }
+                                    }">用户状态
                 </th>
+                <th data-options="field:'roles',width:200">拥有角色</th>
+                <th data-options="field:'_role',align:'center',width:40,
+                                formatter:rowformatter">授予角色</th>
             </tr>
             </thead>
         </table>
@@ -48,6 +59,19 @@
        onclick="edit()">修改</a>
     <a shiro:hasPermission="user:del" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
     onclick="remove()">停用</a>
+</div>
+
+<!-- 授予角色界面 -->
+<div id="roleDlg" class="easyui-dialog" closed="true" data-options="buttons:'#roleDlg-buttons'"
+     style="width:450px;height:auto;padding:10px">
+    <!-- tree -->
+    <ul id="tt"></ul>
+</div>
+<div style="padding:5px" id="roleDlg-buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px"
+       onclick="confirmRole()">确认</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" style="width:90px"
+       onclick="clearRole()">重置</a>
 </div>
 
 <!-- 新增表单 -->
@@ -72,7 +96,7 @@
                 </div>
 
                 <div style="margin-bottom:10px">
-                    <input name="password" class="easyui-textbox" type="password" required="true" label="密码:"
+                    <input name="password" class="easyui-passwordbox" prompt="密码" iconWidth="28" required="true" label="密码:"
                            style="width:100%">
                     </input>
                 </div>
@@ -95,6 +119,61 @@
 
 <!-- 按钮操作 -->
 <script type="text/javascript">
+    var id;
+    // 初始化按钮
+    function rowformatter(value,row,index){
+        return '<input type="button" onclick="role('+row.uid+')" value="授予角色" />';
+    }
+    // 初始化授予角色界面
+    function role(uid) {
+        $('#roleDlg').dialog({
+            title: '授予角色',
+            closed: false,
+            modal: true,
+            iconCls: 'icon-save',
+            top:0
+        });
+        $('#tt').tree({
+            url:'/ctx/role/' + uid,
+            method:'get',
+            animate:true,
+            checkbox:true
+        })
+        id = uid;
+    }
+    // 授予角色
+    function confirmRole() {
+        var dt;
+        var nodes = $('#tt').tree('getChecked');
+        for(var i = 0; i < nodes.length; i++) {
+            $.ajax({
+                type:'POST',
+                url:'/userRole/add',
+                data:{
+                    'flag':i,
+                    'uid':id,
+                    'role_id':nodes[i].id
+                },
+                async:false,
+                success:function (data) {
+                    dt = data;
+                }
+            });
+        }
+        $('#roleDlg').dialog('close');
+        $.messager.show({
+            title: '温馨提示',
+            msg: dt,
+            timeout: 1000,
+            showType: 'slide'
+        });
+        return $('#dg').datagrid('reload');
+    }
+    // 重新加载角色信息
+    function clearRole() {
+        $("#tt").tree('reload');
+    }
+    
     // 新增按钮
     function add() {
         $('#ff').form('reset');

@@ -99,7 +99,7 @@
             var rows = $('#dg').datagrid("getRows");
             if (rows[0].id != "") {
                 // 拼接改变的数据
-                var data = '[{"selected":true,';
+                var data = '[{';
                 for (var i = 0;i < rows.length;i++) {
                     data += '"id":' + rows[i].id + ',"text":"' + rows[i].text + '"';
                     if(i < rows.length - 1) {

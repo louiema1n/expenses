@@ -16,6 +16,10 @@ public class Permission {
     private String resource_type;
     private String url;
 
+    // 父级权限
+    private String parentPer;
+    private long pid;
+
     public long getId() {
         return id;
     }
@@ -78,5 +82,21 @@ public class Permission {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getParentPer() {
+        return parentPer;
+    }
+
+    public void setParentPer(String parentPer) {
+        this.parentPer = parentPer;
+    }
+
+    public long getPid() {
+        return pid;
+    }
+
+    public void setPid(long pid) {
+        this.pid = pid;
     }
 }

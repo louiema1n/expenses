@@ -13,8 +13,19 @@
         <div id="mm" style="width:150px;">
             <div data-options="iconCls:'icon-advancedsettings'" onclick="changePwd()">修改密码</div>
             <div class="menu-sep"></div>
+            <div data-options="iconCls:'icon-arrow-refresh'" onclick="exchange()">切换账户</div>
         </div>
         <script type="text/javascript">
+            <!-- 切换账户 -->
+            function exchange() {
+                $("#userEx").dialog({
+                    title: '登陆',
+                    closed: false,
+                    modal: true,
+                    iconCls: 'icon-arrow-refresh'
+                });
+            }
+
             <!-- 修改密码 -->
             function changePwd() {
                 $("#dlg").dialog({
@@ -60,7 +71,55 @@
                     message:'字段不匹配'
                 }
             })
+            
+            <!-- 登录 -->
+            function login() {
+                $('#lg').form('submit', {
+                    url: '/login',
+                    onSubmit: function () {
+                        // 表单验证
+                        $.ajax({url:'/logout'});
+                        return $(this).form('enableValidation').form('validate');
+                    },
+                    success: function (data) {
+                        // 判断data中是否包含'退出登录'，有则表示登陆成功
+                        var i = data.indexOf('退出登录');
+                        if (i < 0) {
+                            alert('用户名或者密码错误！请重新输入。');
+                            return null;
+                        }
+                        $('#userEx').dialog('close');
+                        // 刷新页面
+                        location.reload();
+                    }
+                });
+            }
+            
         </script>
+
+        <!-- 切换账户登录 -->
+        <div id="userEx" class="easyui-dialog" style="width: 400px" closed="true">
+            <div class="easyui-panel" fit="true" style="padding:30px 70px 20px 70px">
+                <form id="lg" action="/login" method="post">
+                    <div style="margin-bottom:10px">
+                        <input name="username" class="easyui-textbox" style="width:100%;height:40px;padding:12px" data-options="prompt:'用户名',iconCls:'icon-man',iconWidth:38,required:true">
+                    </div>
+                    <div style="margin-bottom:20px">
+                        <input name="password" class="easyui-passwordbox" style="width:100%;height:40px;padding:12px" data-options="prompt:'密码',iconCls:'icon-lock', showEye: true,iconWidth:38,required:true">
+                    </div>
+                    <div style="margin-bottom:20px">
+                        <input name="rememberMe" type="checkbox" checked="checked">
+                        <span>自动登陆</span>
+                    </div>
+                    <div>
+                        <a href="javascript:void(0)" onclick="login()" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" style="padding:5px 0px;width:100%;">
+                            <span style="font-size:14px;">登录</span>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- 修改密码表单 -->
         <div id="dlg" class="easyui-dialog" closed="true" data-options="buttons:'#dlg-buttons'"
              style="width:450px;height:auto;padding:10px">

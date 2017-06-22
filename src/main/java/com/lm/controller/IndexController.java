@@ -1,9 +1,6 @@
 package com.lm.controller;
 
-import org.apache.shiro.authc.ExcessiveAttemptsException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +58,10 @@ public class IndexController {
                 errMsg = "密码连续错误5次，用户被锁定1分钟。如果继续错误，用户将被永久锁定！" ;
             } else if (LockedAccountException.class.getName().equals(exception)) {
                 errMsg = "该用户已被永久锁定，无法登录！";
+            } else if (DisabledAccountException.class.getName().equals(exception)) {
+                errMsg = "该用户已被停用，无法登录！";
+            } else if (ExpiredCredentialsException.class.getName().equals(exception)) {
+                errMsg = "该用户未激活，暂时无法登录";
             } else {
                 errMsg = exception;
             }

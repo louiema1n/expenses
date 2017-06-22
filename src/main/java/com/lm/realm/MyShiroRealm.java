@@ -77,6 +77,14 @@ public class MyShiroRealm extends AuthorizingRealm {
             // 已锁定
             throw new LockedAccountException();
         }
+        if (user.getState() == 3) {
+            // 已禁用
+            throw new DisabledAccountException();
+        }
+        if (user.getState() == 0) {
+            // 未激活
+            throw new ExpiredCredentialsException();
+        }
 
         // 进行密码验证
         SimpleAuthenticationInfo authentication = new SimpleAuthenticationInfo(

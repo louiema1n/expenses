@@ -6,7 +6,7 @@ package com.lm.domain.shiro;
  */
 public class UserRole {
     private long uid;
-    private long roleId;
+    private long role_id;
 
     public long getUid() {
         return uid;
@@ -16,11 +16,11 @@ public class UserRole {
         this.uid = uid;
     }
 
-    public long getRoleId() {
-        return roleId;
+    public long getRole_id() {
+        return role_id;
     }
 
-    public void setRoleId(long roleId) {
-        this.roleId = roleId;
+    public void setRole_id(long role_id) {
+        this.role_id = role_id;
     }
 }

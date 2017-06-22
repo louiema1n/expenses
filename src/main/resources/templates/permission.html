@@ -21,7 +21,7 @@
                 <th data-options="field:'permission',width:100">权限名称</th>
                 <th data-options="field:'resource_type',width:100">资源类型</th>
                 <th data-options="field:'url',width:100">资源路径</th>
-                <th data-options="field:'available',width:180,
+                <th data-options="field:'available',width:80,
                                 formatter:function(value,row){
                                     if(value == 0 ) {
                                         return '已停用';
@@ -30,6 +30,7 @@
                                     }
                                 }">权限状态
                 </th>
+                <th data-options="field:'parentPer',width:100">父级权限</th>
             </tr>
             </thead>
         </table>
@@ -55,6 +56,12 @@
                 <!-- 隐藏域id -->
                 <input type="hidden" id="id" name="id">
                 <div style="margin-bottom:20px;font-size:14px;border-bottom:1px solid #ccc">权限详细信息</div>
+
+                <div style="margin-bottom:10px">
+                    <select id="parentPer" name="pid" class="easyui-combobox" label="父级权限:"
+                            style="width:100%">
+                    </select>
+                </div>
 
                 <div style="margin-bottom:10px">
                     <input name="name" class="easyui-textbox" required="true" label="权限类别:"
@@ -195,6 +202,12 @@
         });
         $("#resource_type").combobox({
             url: 'resourceTypeDict',
+            method: 'GET',
+            valueField: 'id',
+            textField: 'text'
+        });
+        $("#parentPer").combobox({
+            url: '/ctx/per',
             method: 'GET',
             valueField: 'id',
             textField: 'text'

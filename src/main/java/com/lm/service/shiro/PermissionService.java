@@ -24,16 +24,20 @@ public class PermissionService {
         return this.permissionMapper.all();
     }
 
-    public Integer add(String name, String permission, String resource_type, String url, Boolean available) {
-        return this.permissionMapper.add(name, permission, resource_type, url, available);
+    public Integer add(String name, String permission, String resource_type, String url, Boolean available, long pid) {
+        return this.permissionMapper.add(name, permission, resource_type, url, available, pid);
     }
 
-    public Integer upd(long id, String name, String permission, String resource_type, String url, Boolean available) {
-        return this.permissionMapper.update(id, name, permission, resource_type, url, available);
+    public Integer upd(long id, String name, String permission, String resource_type, String url, Boolean available, long pid) {
+        return this.permissionMapper.update(id, name, permission, resource_type, url, available, pid);
     }
 
     public Integer del(long id) {
         return this.permissionMapper.delete(id);
+    }
+
+    public Permission findPerByPid(long pid) {
+        return this.permissionMapper.findPerByPid(pid);
     }
 }
 

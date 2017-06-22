@@ -11,15 +11,16 @@
 				singleSelect: true,
 				toolbar: '#tb',
 				fitColumns:true,
+				nowrap:false,
 				fit:true,
 				rownumbers:true,
 				url:'/role/all',
 				method:'GET'">
             <thead>
             <tr>
-                <th data-options="field:'description',width:50">角色描述</th>
-                <th data-options="field:'role',width:100">角色名</th>
-                <th data-options="field:'available',width:180,
+                <th data-options="field:'description',width:10">角色描述</th>
+                <th data-options="field:'role',width:20">角色名</th>
+                <th data-options="field:'available',width:20,
                                 formatter:function(value,row){
                                     if(value == 0 ) {
                                         return '已停用';
@@ -28,6 +29,10 @@
                                     }
                                 }">角色状态
                 </th>
+                <th data-options="field:'parentRole',width:20">父级角色</th>
+                <th data-options="field:'pers',width:30">拥有权限</th>
+                <th data-options="field:'_permissions',align:'center',width:10,
+                                formatter:rowformatter">授予权限</th>
             </tr>
             </thead>
         </table>
@@ -44,6 +49,19 @@
        onclick="remove()">停用</a>
 </div>
 
+<!-- 授予权限界面 -->
+<div id="perDlg" class="easyui-dialog" closed="true" data-options="buttons:'#perDlg-buttons'"
+     style="width:450px;height:auto;padding:10px">
+    <!-- tree -->
+    <ul id="tt"></ul>
+</div>
+<div style="padding:5px" id="perDlg-buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px"
+       onclick="confirmPer()">确认</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" style="width:90px"
+       onclick="clearPer()">重置</a>
+</div>
+
 <!-- 新增表单 -->
 <div id="dlg" class="easyui-dialog" closed="true" data-options="buttons:'#dlg-buttons'"
      style="width:450px;height:auto;padding:10px">
@@ -53,6 +71,12 @@
                 <!-- 隐藏域id -->
                 <input type="hidden" id="id" name="id">
                 <div style="margin-bottom:20px;font-size:14px;border-bottom:1px solid #ccc">角色信息</div>
+
+                <div style="margin-bottom:10px">
+                    <select id="parentRole" name="pid" class="easyui-combobox" label="父级角色:"
+                            style="width:100%">
+                    </select>
+                </div>
 
                 <div style="margin-bottom:10px">
                     <input name="description" class="easyui-textbox" required="true" label="角色描述:"
@@ -83,6 +107,61 @@
 
 <!-- 按钮操作 -->
 <script type="text/javascript">
+    var rid;
+    // 初始化授权按钮
+    function rowformatter(value,row,index){
+        return '<input type="button" onclick="role('+row.id+')" value="授予权限" />';
+    }
+    // 初始化授予角色界面
+    function role(id) {
+        $('#perDlg').dialog({
+            title: '授予角色',
+            closed: false,
+            modal: true,
+            iconCls: 'icon-save',
+            top:0
+        });
+        $('#tt').tree({
+            url:'/ctx/per/' + id,
+            method:'get',
+            animate:true,
+            checkbox:true
+        })
+        rid = id;
+    }
+    // 授予权限
+    function confirmPer() {
+        var dt;
+        var nodes = $('#tt').tree('getChecked');
+        for(var i = 0; i < nodes.length; i++) {
+            $.ajax({
+                type:'POST',
+                url:'/rolePer/add',
+                data:{
+                    'flag':i,
+                    'role_id':rid,
+                    'permission_id':nodes[i].id
+                },
+                async:false,
+                success:function (data) {
+                    dt = data;
+                }
+            });
+        }
+        $('#perDlg').dialog('close');
+        $.messager.show({
+            title: '温馨提示',
+            msg: dt,
+            timeout: 1000,
+            showType: 'slide'
+        });
+        return $('#dg').datagrid('reload');
+    }
+    // 重新加载角色信息
+    function clearPer() {
+        $("#tt").tree('reload');
+    }
+
     // 新增按钮
     function add() {
         $('#ff').form('reset');
@@ -175,10 +254,16 @@
         init();
     }
 
-    // 初始化available
+    // 初始化available、parentRole
     function init() {
         $("#available").combobox({
             url: 'availableDict',
+            method: 'GET',
+            valueField: 'id',
+            textField: 'text'
+        });
+        $("#parentRole").combobox({
+            url: '/ctx/role',
             method: 'GET',
             valueField: 'id',
             textField: 'text'

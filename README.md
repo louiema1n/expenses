@@ -54,3 +54,7 @@ springboot+easyui+bootstrap支出记录
 2、实现连续6次输错密码即永久锁定用户\
 3、实现role、permission的维护功能
 4、thymeleaf实现shiro标签权限控制
+
+# 2017-6-22 更新
+1、实现授予角色的tree json数据拼接
+2、实现授予角色、授予权限功能

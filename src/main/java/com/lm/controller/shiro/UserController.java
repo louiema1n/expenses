@@ -1,6 +1,8 @@
 package com.lm.controller.shiro;
 
+import com.lm.domain.shiro.Role;
 import com.lm.domain.shiro.User;
+import com.lm.service.shiro.RoleService;
 import com.lm.service.shiro.UserService;
 import com.lm.utils.MD5Password;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -22,14 +24,33 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RoleService roleService;
+
     /**
-     * 获取所有user数据（不包含已停用的）
+     * 获取所有user数据
      * @return
      */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @RequiresPermissions("user:view")
     public List<User> users() {
-        return this.userService.all();
+        List<User> users = this.userService.all();
+        // 初始化已有角色
+        for (User user : users) {
+            // 根据uid获取已有role
+            List<Role> roles = this.roleService.findRoleByUid(user.getUid());
+            String str = "[";
+            for (int i = 0; i < roles.size(); ) {
+                str += roles.get(i).getDescription();
+                i++;
+                if (i < roles.size()) {
+                    str += ",";
+                }
+            }
+            str += "]";
+            user.setRoles(str);
+        }
+        return users;
     }
 
     /**

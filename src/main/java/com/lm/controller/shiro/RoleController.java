@@ -1,6 +1,9 @@
 package com.lm.controller.shiro;
 
+import com.lm.domain.shiro.Permission;
 import com.lm.domain.shiro.Role;
+import com.lm.domain.shiro.User;
+import com.lm.service.shiro.PermissionService;
 import com.lm.service.shiro.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -22,13 +25,38 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private PermissionService permissionService;
+
     /**
      * 查询所有role
      * @return
      */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<Role> all() {
-        return this.roleService.all();
+        List<Role> roles = this.roleService.all();
+        // 初始化父级角色、已有权限
+        for (Role role : roles) {
+            // 根据role_id获取已有permission
+            List<Permission> permissions = this.permissionService.findPerByRoleid(role.getId());
+            String str = "[";
+            for (int i = 0; i < permissions.size(); ) {
+                str += permissions.get(i).getName();
+                i++;
+                if (i < permissions.size()) {
+                    str += ",";
+                }
+            }
+            str += "]";
+            role.setPers(str);
+            // 根节点的父节点是其本身
+            if (role.getPid() == 0) {
+                role.setParentRole(role.getDescription());
+            } else {
+                role.setParentRole(this.roleService.findRoleByPid(role.getPid()).getDescription());
+            }
+        }
+        return roles;
     }
 
     /**
@@ -41,7 +69,8 @@ public class RoleController {
         int i = this.roleService.add(
                 role.getDescription(),
                 role.getRole(),
-                role.getAvailable()
+                role.getAvailable(),
+                role.getPid()
         );
         if (i > 0) {
             return "新增成功";
@@ -60,7 +89,8 @@ public class RoleController {
                 role.getId(),
                 role.getDescription(),
                 role.getRole(),
-                role.getAvailable()
+                role.getAvailable(),
+                role.getPid()
         );
         if (i > 0) {
             return "修改成功";

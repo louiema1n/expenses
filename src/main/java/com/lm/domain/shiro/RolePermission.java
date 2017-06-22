@@ -5,22 +5,22 @@ package com.lm.domain.shiro;
  * Created by Louie on 2017-06-18.
  */
 public class RolePermission {
-    private long permissionId;
-    private long roleId;
+    private long permission_id;
+    private long role_id;
 
-    public long getPermissionId() {
-        return permissionId;
+    public long getPermission_id() {
+        return permission_id;
     }
 
-    public void setPermissionId(long permissionId) {
-        this.permissionId = permissionId;
+    public void setPermission_id(long permission_id) {
+        this.permission_id = permission_id;
     }
 
-    public long getRoleId() {
-        return roleId;
+    public long getRole_id() {
+        return role_id;
     }
 
-    public void setRoleId(long roleId) {
-        this.roleId = roleId;
+    public void setRole_id(long role_id) {
+        this.role_id = role_id;
     }
 }

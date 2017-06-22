@@ -24,15 +24,19 @@ public class RoleService {
         return this.roleMapper.all();
     }
 
-    public Integer add(String description, String role, Boolean available) {
-        return this.roleMapper.add(description, role, available);
+    public Integer add(String description, String role, Boolean available, long pid) {
+        return this.roleMapper.add(description, role, available, pid);
     }
 
-    public Integer upd(long id, String description, String role, Boolean available) {
-        return this.roleMapper.update(id, description, role, available);
+    public Integer upd(long id, String description, String role, Boolean available, long pid) {
+        return this.roleMapper.update(id, description, role, available, pid);
     }
 
     public Integer del(long id) {
         return this.roleMapper.delete(id);
+    }
+
+    public Role findRoleByPid(long pid) {
+        return this.roleMapper.findRoleByPid(pid);
     }
 }

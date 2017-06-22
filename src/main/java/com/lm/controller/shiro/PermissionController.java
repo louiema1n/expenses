@@ -30,7 +30,16 @@ public class PermissionController {
      */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<Permission> all() {
-        return this.permissionService.all();
+        List<Permission> permissions = this.permissionService.all();
+        // 初始化父级权限
+        for (Permission permission : permissions) {
+            if (permission.getPid() == 0) {
+                permission.setParentPer(permission.getName());
+            } else {
+                permission.setParentPer(this.permissionService.findPerByPid(permission.getPid()).getName());
+            }
+        }
+        return permissions;
     }
 
     /**
@@ -45,7 +54,8 @@ public class PermissionController {
                 permission.getPermission(),
                 permission.getResource_type(),
                 permission.getUrl(),
-                permission.getAvailable()
+                permission.getAvailable(),
+                permission.getPid()
         );
         if (i > 0) {
             return "新增成功";
@@ -66,7 +76,8 @@ public class PermissionController {
                 permission.getPermission(),
                 permission.getResource_type(),
                 permission.getUrl(),
-                permission.getAvailable()
+                permission.getAvailable(),
+                permission.getPid()
         );
         if (i > 0) {
             return "修改成功";
