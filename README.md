@@ -61,3 +61,4 @@ springboot+easyui+bootstrap支出记录
 
 # 2017-6-23 更新
 1、完善权限、角色功能
+2、解决（String index out of range: -1），当没有文件上传时不能进行substring

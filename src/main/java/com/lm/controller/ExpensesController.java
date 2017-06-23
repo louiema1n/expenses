@@ -80,12 +80,12 @@ public class ExpensesController {
      */
     @RequestMapping(value = "", method = RequestMethod.POST)
     public String add(Expenses expenses, MultipartFile file) {
-//        System.out.println(file.getOriginalFilename());
-
-        // 上传图片
-        String imgurl = new UpdImg().upload(file, path);
-        // 格式化图片地址
-        expenses.setImgurl("<a href=\"javascript:void(0)\" onclick=\"view('" + imgurl + "')\">查看图片</a>");
+        if (!file.isEmpty()) {
+            // 上传图片
+            String imgurl = new UpdImg().upload(file, path);
+            // 格式化图片地址
+            expenses.setImgurl("<a href=\"javascript:void(0)\" onclick=\"view('" + imgurl + "')\">查看图片</a>");
+        }
 
         LOGGER.info("【新增】支出记录:" +
                 expenses.getName() + "在" +
