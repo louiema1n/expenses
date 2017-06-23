@@ -39,11 +39,11 @@
 
 <!-- 工具栏 -->
 <div id="tb" style="height:auto">
-    <a shiro:hasPermission="user:add" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
+    <a shiro:hasPermission="permission:add" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
        onclick="add()">添加</a>
-    <a shiro:hasPermission="user:edit" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"
+    <a shiro:hasPermission="permission:edit" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"
        onclick="edit()">修改</a>
-    <a shiro:hasPermission="user:del" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
+    <a shiro:hasPermission="permission:del" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
        onclick="remove()">停用</a>
 </div>
 

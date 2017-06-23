@@ -31,7 +31,7 @@
                 </th>
                 <th data-options="field:'parentRole',width:20">父级角色</th>
                 <th data-options="field:'pers',width:30">拥有权限</th>
-                <th data-options="field:'_permissions',align:'center',width:10,
+                <th shiro:hasPermission="rolePer:add" data-options="field:'_permissions',align:'center',width:10,
                                 formatter:rowformatter">授予权限</th>
             </tr>
             </thead>
@@ -41,11 +41,11 @@
 
 <!-- 工具栏 -->
 <div id="tb" style="height:auto">
-    <a shiro:hasPermission="user:add" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
+    <a shiro:hasPermission="role:add" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
        onclick="add()">添加</a>
-    <a shiro:hasPermission="user:edit" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"
+    <a shiro:hasPermission="role:edit" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"
        onclick="edit()">修改</a>
-    <a shiro:hasPermission="user:del" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
+    <a shiro:hasPermission="role:del" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
        onclick="remove()">停用</a>
 </div>
 

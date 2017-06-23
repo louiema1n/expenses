@@ -32,7 +32,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    @RequiresPermissions("user:view")
+//    @RequiresPermissions("user:view")
     public List<User> users() {
         List<User> users = this.userService.all();
         // 初始化已有角色

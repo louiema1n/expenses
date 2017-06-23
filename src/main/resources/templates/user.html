@@ -43,7 +43,7 @@
                                     }">用户状态
                 </th>
                 <th data-options="field:'roles',width:200">拥有角色</th>
-                <th data-options="field:'_role',align:'center',width:40,
+                <th shiro:hasPermission="userRole:add" data-options="field:'_role',align:'center',width:40,
                                 formatter:rowformatter">授予角色</th>
             </tr>
             </thead>
